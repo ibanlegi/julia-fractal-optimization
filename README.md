@@ -65,12 +65,3 @@ feat: add timestamp-based automatic CSV file naming
 1. **Imperative tense**: “Add”, “Fix”, “Remove” (like giving a command).
 2. **Keep the subject short and descriptive** (don’t include details in the summary).
 3. **Optionally** add a body after a blank line for more explanation if needed.
-
-**Why:**
-
-* Makes `git log` easy to read.
-* Enables automated tools to generate changelogs.
-* Keeps commits atomic and focused.
-
-
-
