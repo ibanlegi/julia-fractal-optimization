@@ -4,6 +4,7 @@
 SRC_DIR := src
 DATA_DIR := data
 SAVE_DIR := data-save
+PICTURE_DIR := export-pictures
 
 # Compiler
 CXX := g++
@@ -36,15 +37,6 @@ else
 endif
 
 # -----------------------------
-# Clean all executables (same basename as src/*.cpp)
-# -----------------------------
-clean:
-	@for f in $(SRC_DIR)/*.cpp; do \
-		name=$$(basename $$f .cpp); \
-		if [ -f $$name ]; then rm $$name; fi; \
-	done
-
-# -----------------------------
 # Clean all data files with confirmation
 # -----------------------------
 clean-data:
@@ -53,6 +45,36 @@ clean-data:
 	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
 		rm -f $(DATA_DIR)/*; \
 		echo "All files in $(DATA_DIR) deleted."; \
+	else \
+		echo "Aborted."; \
+	fi
+
+# -----------------------------
+# Clean all pictures files with confirmation
+# -----------------------------
+clean-pictures:
+	@echo "Warning: This will delete all files in $(PICTURE_DIR)/"
+	@read -p "Are you sure? [y/N] " answer && \
+	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
+		rm -f $(PICTURE_DIR)/*; \
+		echo "All files in $(PICTURE_DIR) deleted."; \
+	else \
+		echo "Aborted."; \
+	fi
+
+
+# -----------------------------
+# Clean BOTH DATA & PICTURES with confirmation
+# -----------------------------
+clean-all:
+	@echo "Warning: This will delete ALL files in:"
+	@echo "  - $(DATA_DIR)/"
+	@echo "  - $(PICTURE_DIR)/"
+	@read -p "Are you sure? [y/N] " answer && \
+	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
+		rm -f $(DATA_DIR)/* 2>/dev/null; \
+		rm -f $(PICTURE_DIR)/* 2>/dev/null; \
+		echo "All files deleted in both folders."; \
 	else \
 		echo "Aborted."; \
 	fi
@@ -82,8 +104,9 @@ help:
 	@echo "Available make commands:"
 	@echo "  make all                Compile all sources in $(SRC_DIR)/, executables named after source files"
 	@echo "  make s FILE=src/foo.cpp Compile single source file; executable named after the file"
-	@echo "  make clean              Remove all executables (same basename as src/*.cpp)"
 	@echo "  make clean-data         Delete all files in $(DATA_DIR)/ (asks for confirmation)"
+	@echo "  make clean-pictures     Delete all files in $(PICTURE_DIR)/ (asks for confirmation)"
+	@echo "  make clean-all          Delete all files in $(DATA_DIR) and $(PICTURE_DIR) / (asks for confirmation)"
 	@echo "  make save FILE=xxx.csv  Move FILE to $(SAVE_DIR)/"
 	@echo "  make help               Show this help message"
 
