@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     cout << "Output file destination :  " << dataFile << endl;
     cout << "Frequency : \t\t   " << frequency << endl;
 
-    string cmd_mojitos = "sudo ../mojitos/bin/mojitos  -r -u -f "
+    string cmd_mojitos = "sudo-g5k ../mojitos/bin/mojitos  -r -u -f "
                         + frequency
                         + " -o " 
                         + dataFile 
@@ -149,6 +149,7 @@ int main(int argc, char *argv[]) {
         cerr << "Failed to kill mojitos process (" << pid << ")" << endl;
     }
 
+
     if (print_output) {
         cout << "Output " << dataFile << endl;
         printCSV(dataFile);
@@ -156,3 +157,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
