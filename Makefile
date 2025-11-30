@@ -1,112 +1,142 @@
-# Makefile
+# ==========================================================
+# Main Makefile
+# ==========================================================
+
+# Compiler and flags
+CXX      = g++
+CXXFLAGS = -Wall -O2 -std=c++17
 
 # Directories
-SRC_DIR := src
-DATA_DIR := data
-SAVE_DIR := data-save
-PICTURE_DIR := export-pictures
+SRC_DIR       = src
+GEN_DIR       = $(SRC_DIR)/generators
+BUILD_DIR     = generators
+DATA_DIR      = data
+DATA_SAVE_DIR = data-save
+PIC_DIR       = export-pictures
+PIC_JPEG_DIR  = $(PIC_DIR)/jpeg
+PIC_PPM_DIR   = $(PIC_DIR)/ppm
 
-# Compiler
-CXX := g++
-CXXFLAGS := -std=c++17 -Wall -O2
+# Source files
+MAIN_SRC     = $(SRC_DIR)/main.cpp
+GEN_SOURCES  = $(wildcard $(GEN_DIR)/*.cpp)
+GEN_TARGETS  = $(patsubst $(GEN_DIR)/%.cpp,$(BUILD_DIR)/%,$(GEN_SOURCES))
 
-.PHONY: all clean clean-data save single
+# ==========================================================
+# Default rule
+# ==========================================================
+all: main gen-julia
 
-# -----------------------------
-# Build all sources
-# -----------------------------
-all:
-	@for f in $(SRC_DIR)/*.cpp; do \
-		name=$$(basename $$f .cpp); \
-		echo "Compiling $$f -> $$name"; \
-		$(CXX) $(CXXFLAGS) $$f -o $$name; \
-	done
+# ==========================================================
+# Compile main
+# ==========================================================
+main: $(MAIN_SRC)
+	@echo "Compiling main..."
+	$(CXX) $(CXXFLAGS) -o main $(MAIN_SRC)
 
-# -----------------------------
-# Compile single source
-# Usage: make single FILE=src/foo.cpp
-# Output: foo
-# -----------------------------
-s:
-ifdef FILE
-	@name=$(basename $(notdir $(FILE))); \
-	echo "Compiling $(FILE) -> $$name"; \
-	$(CXX) $(CXXFLAGS) $(FILE) -o $$name
-else
-	$(error Please provide FILE=source.cpp)
+# ==========================================================
+# Compile al generator files
+# ==========================================================
+$(BUILD_DIR)/%: $(GEN_DIR)/%.cpp
+	@mkdir -p $(BUILD_DIR)
+	@echo "Compiling generator $< -> $@"
+	$(CXX) $(CXXFLAGS) -o $@ $<
+
+gen-julia: $(GEN_TARGETS)
+	@echo "All generators compiled in $(BUILD_DIR)/"
+
+# ==========================================================
+# Compile single source file
+# Usage: make FILE=src/foo.cpp
+# ==========================================================
+:
+ifndef FILE
+	$(error "Please provide FILE=src/yourfile.cpp")
 endif
+	@echo "Compiling single file $(FILE)..."
+	$(CXX) $(CXXFLAGS) -o $(notdir $(FILE:.cpp=)) $(FILE)
 
-# -----------------------------
-# Clean all data files with confirmation
-# -----------------------------
+# ==========================================================
+# Setup directories
+# ==========================================================
+setup:
+	@mkdir -p $(DATA_DIR) $(DATA_SAVE_DIR) $(PIC_JPEG_DIR) $(PIC_PPM_DIR)
+	@echo "Created directories: $(DATA_DIR), $(DATA_SAVE_DIR), $(PIC_JPEG_DIR), $(PIC_PPM_DIR)"
+
+# ==========================================================
+# Install dependencies
+# ==========================================================
+deps:
+	@echo "Installing dependencies..."
+	# ImageMagick
+	sudo-g5k apt install imagemagick
+	@echo "Dependencies installed"
+
+# ==========================================================
+# Initialize project: setup + deps + build all
+# ==========================================================
+init: setup deps all
+	@echo "Project initialized successfully!"
+
+# ==========================================================
+# Cleaning
+# ==========================================================
+clean:
+	@echo "Cleaning project..."
+	rm -f main
+	rm -rf $(BUILD_DIR)/*
+
 clean-data:
-	@echo "Warning: This will delete all files in $(DATA_DIR)/"
-	@read -p "Are you sure? [y/N] " answer && \
-	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
+	@read -p "Are you sure to delete all files in $(DATA_DIR)/ ? [y/N] " ans; \
+	if [ "$$ans" = "y" ] || [ "$$ans" = "Y" ]; then \
 		rm -f $(DATA_DIR)/*; \
-		echo "All files in $(DATA_DIR) deleted."; \
+		echo "Deleted all files in $(DATA_DIR)/"; \
 	else \
-		echo "Aborted."; \
+		echo "Abort"; \
 	fi
 
-# -----------------------------
-# Clean all pictures files with confirmation
-# -----------------------------
 clean-pictures:
-	@echo "Warning: This will delete all files in $(PICTURE_DIR)/"
-	@read -p "Are you sure? [y/N] " answer && \
-	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
-		rm -f $(PICTURE_DIR)/*; \
-		echo "All files in $(PICTURE_DIR) deleted."; \
+	@read -p "Are you sure to delete all files in $(PIC_DIR)/ ? [y/N] " ans; \
+	if [ "$$ans" = "y" ] || [ "$$ans" = "Y" ]; then \
+		rm -f $(PIC_JPEG_DIR)/*; \
+		rm -f $(PIC_PPM_DIR)/*; \
+		echo "Deleted all files in $(PIC_DIR)/"; \
 	else \
-		echo "Aborted."; \
+		echo "Abort"; \
 	fi
 
+clean-all: clean-data clean-pictures
 
-# -----------------------------
-# Clean BOTH DATA & PICTURES with confirmation
-# -----------------------------
-clean-all:
-	@echo "Warning: This will delete ALL files in:"
-	@echo "  - $(DATA_DIR)/"
-	@echo "  - $(PICTURE_DIR)/"
-	@read -p "Are you sure? [y/N] " answer && \
-	if [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; then \
-		rm -f $(DATA_DIR)/* 2>/dev/null; \
-		rm -f $(PICTURE_DIR)/* 2>/dev/null; \
-		echo "All files deleted in both folders."; \
-	else \
-		echo "Aborted."; \
-	fi
-
-# -----------------------------
-# Save a specific data file
+# ==========================================================
+# Save file
 # Usage: make save FILE=xxx.csv
-# -----------------------------
+# ==========================================================
 save:
-ifdef FILE
-	@mkdir -p $(SAVE_DIR)
-	@if [ -f "$(FILE)" ]; then \
-		mv $(FILE) $(SAVE_DIR)/; \
-		echo "Saved $(FILE) to $(SAVE_DIR)/"; \
-	else \
-		echo "File $(FILE) does not exist!"; \
-	fi
-else
-	$(error Please provide FILE=filename.csv)
+ifndef FILE
+	$(error "Please provide FILE=filename.csv")
 endif
+	@mkdir -p $(DATA_SAVE_DIR)
+	@mv $(FILE) $(DATA_SAVE_DIR)/
+	@echo "Moved $(FILE) -> $(DATA_SAVE_DIR)/"
 
-
-# -----------------------------
+# ==========================================================
 # Help
-# -----------------------------
+# ==========================================================
 help:
 	@echo "Available make commands:"
-	@echo "  make all                Compile all sources in $(SRC_DIR)/, executables named after source files"
-	@echo "  make s FILE=src/foo.cpp Compile single source file; executable named after the file"
-	@echo "  make clean-data         Delete all files in $(DATA_DIR)/ (asks for confirmation)"
-	@echo "  make clean-pictures     Delete all files in $(PICTURE_DIR)/ (asks for confirmation)"
-	@echo "  make clean-all          Delete all files in $(DATA_DIR) and $(PICTURE_DIR) / (asks for confirmation)"
-	@echo "  make save FILE=xxx.csv  Move FILE to $(SAVE_DIR)/"
+	@echo "  make all                Compile all sources in src/, executables named after source files"
+	@echo "  make init               Setup, install dependencies, and build all"
+	@echo "  make setup              Create necessary directories (data, data-save, export-pictures/jpeg, export-pictures/ppm)"
+	@echo "  make deps               Install dependencies"
+	@echo "  make gen-julia          Compile all sources in src/generators/ in generators/, executable named after source files"
+	@echo "  make FILE=src/foo.cpp Compile single source file; executable named after the file"
+	@echo "  make clean              Remove main and generator binaries"
+	@echo "  make clean-data         Delete all files in data/ (asks for confirmation)"
+	@echo "  make clean-pictures     Delete all files in export-pictures/ (asks for confirmation)"
+	@echo "  make clean-all          Delete all files in data and export-pictures/ (asks for confirmation)"
+	@echo "  make save FILE=xxx.csv  Move FILE to data-save/"
 	@echo "  make help               Show this help message"
 
+# ==========================================================
+# Declarations
+# ==========================================================
+.PHONY: all main gen-julia s clean clean-data clean-pictures clean-all save help
