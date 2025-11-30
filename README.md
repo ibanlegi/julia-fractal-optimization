@@ -1,67 +1,76 @@
+Voici une **version intégralement basculée en anglais**, propre et cohérente, sans changer le fond (juste la langue et quelques formulations rendues plus naturelles).
+
+---
+
+````md
 # embedded-sys-energy
 
-## Liens
-- [Sujet - Da Costa](https://www.irit.fr/~Georges.Da-Costa/syst%C3%A8mes-embarqu%C3%A9s-%C3%A9nergie/)
+## Links
+- [Project description – Da Costa](https://www.irit.fr/~Georges.Da-Costa/syst%C3%A8mes-embarqu%C3%A9s-%C3%A9nergie/)
+- [Moodle – Embedded Systems, Energy](https://moodle.utoulouse.fr/course/view.php?id=5203#Energie)
 
-- [Moodle - Systèmes embarqués, Energie](https://moodle.utoulouse.fr/course/view.php?id=5203#Energie)
-
-
-
-## Connexion
-```
+## Connection
+```bash
 ssh ileginyo@access.grid5000.fr
-```
+````
 
-```
+```bash
 ssh nancy
 ```
 
-```
+```bash
 oarsub -I -l walltime=1:0:0 -p "cluster='gros'"
 ```
 
-## Commandes utiles
-```
+## Useful commands
+
+```bash
 sudo-g5k
 ```
-> pour passer en root
+
+> used to switch to root privileges
 
 ## MojitO/S
-> capteur RAPL : Consommation mémoire et processeur (en micro-joules)
 
-- f | frequence : set amount of measurements per second
-- t | time : set duration value (seconds). If 0, then loops infinitely.
-- o | option : specify a log file for MojitO/S or a port number for prometeus_mojitO/S. \<output file> or \<port number>.
-- s | overhead-stats : enable overhead statistics (nanoseconds).
+> RAPL sensor: memory and CPU energy consumption (in micro-joules)
 
+* `f` | frequency: set the number of measurements per second
+* `t` | time: set the execution duration (seconds). If 0, runs indefinitely
+* `o` | option: specify a log file for MojitO/S or a port number for prometheus_mojitO/S
+  (`<output file>` or `<port number>`)
+* `s` | overhead-stats: enable overhead statistics (nanoseconds)
 
-### **Commit Message Rule **
+## Commit Message Rules
 
-**Format:**
+### Format
 
 ```
 <type>: <short summary>
 ```
 
-**Where:**
+### Where
 
-* **type** is one of:
+**type** must be one of:
 
-  * `feat` → new feature
-  * `fix` → bug fix
-  * `refactor` → code restructuring without changing behavior
-  * `docs` → documentation
-  * `build` → build system / Makefile / CI changes
-* **short summary** → concise, imperative-style description (max ~50 chars recommended)
+* `feat` → new feature
+* `fix` → bug fix
+* `refactor` → code restructuring without behavior change
+* `docs` → documentation
+* `build` → build system / Makefile / CI changes
 
-**Example:**
+**short summary** → concise, imperative description
+(recommended maximum: ~50 characters)
+
+### Example
 
 ```
 feat: add timestamp-based automatic CSV file naming
 ```
 
-**Additional rules:**
+### Additional rules
 
-1. **Imperative tense**: “Add”, “Fix”, “Remove” (like giving a command).
-2. **Keep the subject short and descriptive** (don’t include details in the summary).
-3. **Optionally** add a body after a blank line for more explanation if needed.
+1. **Use imperative tense**: “Add”, “Fix”, “Remove”
+2. **Keep the summary short and descriptive** (details go in the body)
+3. **Optionally**, add a commit body after a blank line if more context is needed
+
+```
