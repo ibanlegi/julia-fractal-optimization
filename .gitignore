@@ -1,6 +1,7 @@
 main
 print_file
 /generators/*
+/export-pictures/ppm
 *.o
 *.out
 *.exe
