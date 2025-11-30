@@ -1,8 +1,4 @@
-Voici une **version intégralement basculée en anglais**, propre et cohérente, sans changer le fond (juste la langue et quelques formulations rendues plus naturelles).
 
----
-
-````md
 # embedded-sys-energy
 
 ## Links
