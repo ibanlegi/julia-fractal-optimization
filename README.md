@@ -68,5 +68,3 @@ feat: add timestamp-based automatic CSV file naming
 1. **Use imperative tense**: “Add”, “Fix”, “Remove”
 2. **Keep the summary short and descriptive** (details go in the body)
 3. **Optionally**, add a commit body after a blank line if more context is needed
-
-```
