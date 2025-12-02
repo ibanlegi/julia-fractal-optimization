@@ -1,10 +1,12 @@
 main
 print_file
-/generators/*
-/export-pictures/ppm
 *.o
 *.out
 *.exe
+/generators/*
+/export-pictures/ppm
+/old-files
+
 
 __pycache__/
 .vscode/
