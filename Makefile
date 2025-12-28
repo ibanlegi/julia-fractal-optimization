@@ -32,7 +32,7 @@ GEN_TARGETS  = $(patsubst $(GEN_DIR)/%.cpp,$(GEN_BUILD_DIR)/%,$(GEN_SOURCES))
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 src: $(SRC_TARGETS)
-	@echo "Tous les fichiers sources dans $(SRC_DIR)/ ont été compilés."
+	@echo "All source files in $(SRC_DIR)/ have been compiled."
 
 # ==========================================================
 # Compile all generators
@@ -68,6 +68,7 @@ setup:
 # ==========================================================
 deps:
 	@echo "Installing dependencies..."
+	pip install "numpy<2"
 	sudo-g5k apt install imagemagick
 	pip install scikit-image
 	@echo "Dependencies installed."
