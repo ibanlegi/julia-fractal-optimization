@@ -53,7 +53,7 @@ private:
         -r : Active les capteurs RAPL qui mesurent la consommation du processeur et de la mémoire en micro-joules (µJ). 
 
         */
-        return sudoCmd + " ../mojitos/bin/mojitos"
+        return sudoCmd + " ../mojitos/bin/mojitos -r"
              + " -f " + frequency
              + " -o " + filePath
              + " -- " + userCmd;
