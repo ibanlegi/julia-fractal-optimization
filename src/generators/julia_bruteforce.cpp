@@ -1,3 +1,8 @@
+/*
+Version 0: Brute-force (The Reference)
+
+*/
+
 #include <iostream>
 #include <fstream>
 
@@ -6,7 +11,7 @@
 
 
 int main() {
-    const int taille = 1000; //10000
+    const int taille = 10000; //10000
     const double xmin = -1.0, xmax = 1.0;
     const double ymin = -1.0, ymax = 1.0;
     const int iterationmax = 1000;

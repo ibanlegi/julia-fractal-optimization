@@ -13,24 +13,6 @@ using namespace std;
 #define PATH_DATA "./data/"
 #define PATH_PPM  "./export-pictures/ppm/"
 
-// Timer 
-struct Timer {
-    timespec startTime{};
-    timespec endTime{};
-
-    void start() { 
-        clock_gettime(CLOCK_MONOTONIC, &startTime); 
-    }
-    
-    void stop()  { 
-        clock_gettime(CLOCK_MONOTONIC, &endTime);
-    }
-
-    double elapsed() const {
-        return (endTime.tv_sec - startTime.tv_sec) + (endTime.tv_nsec - startTime.tv_nsec) / 1e9;
-    }
-};
-
 // Generate filename from timestamp
 string generateFileName() {
     time_t now = time(nullptr);
@@ -189,26 +171,10 @@ int main(int argc, char* argv[]) {
 
     MojitosMonitor monitor(fileName, frequency, sudoCmd, userCmd);
 
-    //Timer timer;
-    //timer.start();
     if (!monitor.run()) return 1;
-    //timer.stop();
-
-    //double execTime = timer.elapsed();
 
     EnergyReport report;
     report.parse(fileName);
-
-    //double totalEnergy = report.get_cpuEnergy() + report.get_memEnergy();
-    //double power = (execTime > 0) ? report.get_totalEnergy() / execTime : 0.0;
-    /*
-     double get_cpuEnergy()     { return cpuEnergy; } 
-    double get_memEnergy()     { return memEnergy; }
-    double get_totalEnergy()   { return totalEnergy; }
-    double get_executionTime() { return executionTime; }
-    double get_maxPower() 
-    
-    */
 
     if (printOutput) { 
         cout << fileName << "," << report.get_executionTime() << "," << report.get_totalEnergy() << "," << report.get_maxPower() << endl; 
