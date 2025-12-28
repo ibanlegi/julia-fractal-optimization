@@ -1,5 +1,8 @@
-/* Version 0: Brute-force (The Reference) */
-/* -> reference*/
+/* Version 0: Brute-force (The Reference)
+Compile : g++ -Wall -O2 -std=c++17 -o generators/julia_bruteforce src/generators/julia_bruteforce.cpp
+Execute : ./main -p "./generators/julia_bruteforce" -f 10 -d "reference"
+-> reference
+*/
 
 #include <iostream>
 #include <fstream>

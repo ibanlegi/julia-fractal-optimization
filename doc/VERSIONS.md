@@ -1,7 +1,16 @@
 
 # 1. Version 0 : Brute-force (La Référence)
 > `julia_bruteforce.cpp`
-C'est votre point de comparaison initial, correspondant au code que vous avez déjà fourni. Elle calcule chaque pixel un par un sans aucune optimisation mathématique ou matérielle. Elle sert de base pour mesurer le gain des versions suivantes.
+```bash
+===== Measurement Results =====
+Execution time: 21.7056 s
+CPU energy: 4.18938 J
+Memory energy: 0.780943 J
+(CPU + Memory): 4.97032 J
+Max power: 50.8568 W
+===============================
+```
+C'est le point de comparaison initial. Elle calcule chaque pixel un par un sans aucune optimisation mathématique ou matérielle. Elle sert de base pour mesurer le gain des versions suivantes.
 
 # 2. Version 1 : Parallélisation (Multi-threading)
 > `julia_parallel.cpp`
