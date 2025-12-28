@@ -27,8 +27,13 @@ GEN_TARGETS  = $(patsubst $(GEN_DIR)/%.cpp,$(GEN_BUILD_DIR)/%,$(GEN_SOURCES))
 # ==========================================================
 # Compile ALL sources in src/ (excluding generators)
 # ==========================================================
+
+%: $(SRC_DIR)/%.cpp
+	@echo "Compilation de $< -> $@"
+	$(CXX) $(CXXFLAGS) -o $@ $<
+
 src: $(SRC_TARGETS)
-	@echo "All source files in $(SRC_DIR)/ compiled."
+	@echo "Tous les fichiers sources dans $(SRC_DIR)/ ont été compilés."
 
 # ==========================================================
 # Compile all generators

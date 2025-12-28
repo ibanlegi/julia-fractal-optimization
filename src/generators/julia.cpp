@@ -21,10 +21,10 @@ string generateFileName() {
 }
 
 int main() {
-    const int taille = 1000;
+    const int taille = 10000;
     const double xmin = -1.0, xmax = 1.0;
     const double ymin = -1.0, ymax = 1.0;
-    const int iterationmax = 5000;
+    const int iterationmax = 1000;
 
     // Paramètres de Julia
     const double a = -0.8;

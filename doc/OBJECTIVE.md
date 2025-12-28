@@ -8,7 +8,7 @@ Optimiser la génération d’images de l’ensemble de Julia tout en minimisant
 
 ## Approche
 - Implémenter plusieurs stratégies ou algorithmes de génération pour l'ensemble de Julia.
-- Mesurer les performances de chaque approche à l'aide d'outils automatisés (ex.: Mojitos).
+- Mesurer les performances de chaque approche à l'aide d'outils (ex.: Mojitos).
 - Comparer les résultats pour identifier le meilleur compromis entre rapidité, consommation d'énergie et qualité d'image.
 
 ## Critères de réussite

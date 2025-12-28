@@ -40,7 +40,7 @@ string generateFileName() {
     return buffer;
 }
 
-// Class: MojitosMonitor (Responsible for building and executing Mojitos command)
+// Responsible for building and executing Mojitos command
 class MojitosMonitor {
 private:
     string filePath;
@@ -49,7 +49,11 @@ private:
     string userCmd;
 
     string buildCommand() const {
-        return sudoCmd + " ../mojitos/bin/mojitos -r -m -e"
+        /*
+        -r : Active les capteurs RAPL qui mesurent la consommation du processeur et de la mémoire en micro-joules (µJ). 
+
+        */
+        return sudoCmd + " ../mojitos/bin/mojitos"
              + " -f " + frequency
              + " -o " + filePath
              + " -- " + userCmd;
@@ -81,7 +85,7 @@ public:
     string getDataFile() const { return filePath; }
 };
 
-// Class: EnergyReport (Reads energy CSV and extracts metrics)
+// Reads energy CSV and extracts metrics
 class EnergyReport {
 private:
     double cpuEnergy = 0.0;
@@ -140,7 +144,7 @@ public:
                 if (!(row >> vals[i])) break;
             }
 
-            cpuEnergy += vals[colIndex["totalram"]] - vals[colIndex["freeram"]];
+            cpuEnergy += vals[colIndex["totalram"] ] - vals[colIndex["freeram"]];
             memEnergy += vals[colIndex["totalswap"]] - vals[colIndex["freeswap"]];
             totalEnergy = cpuEnergy + memEnergy;
         }

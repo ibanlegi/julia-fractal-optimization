@@ -9,7 +9,7 @@ print_file
 
 
 __pycache__/
-.vscode/
+.vscode
 
 *.log
 test_perf_output.txt
