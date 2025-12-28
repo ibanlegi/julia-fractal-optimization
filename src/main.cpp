@@ -25,7 +25,9 @@ string generateFileName() {
 // Responsible for building and executing Mojitos command
 class MojitosMonitor {
 private:
+
     string filePath;
+    string fileName;
     string frequency;
     string sudoCmd;
     string userCmd;
@@ -38,17 +40,18 @@ private:
         return sudoCmd + " ../mojitos/bin/mojitos -r"
              + " -f " + frequency
              + " -o " + filePath
-             + " -- " + userCmd;
+             + " -- " + userCmd + " " + fileName;
     }
 
 public:
     MojitosMonitor(
-        const string& fileName,
+        const string& file_name,
         const string& freq,
         const string& sudo,
         const string& cmd
     ) :
-        filePath(string(PATH_DATA) + fileName + ".csv"),
+        filePath(string(PATH_DATA) + file_name + ".csv"),
+        fileName(file_name),
         frequency(freq),
         sudoCmd(sudo),
         userCmd(cmd) {}

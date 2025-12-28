@@ -1,17 +1,28 @@
-/*
-Version 0: Brute-force (The Reference)
-
-*/
+/* Version 0: Brute-force (The Reference) */
+/* -> reference*/
 
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <string>
+#include <ctime>
 
-#include "utils.h"
+using namespace std;
 
+#define DEST_FILE_DATA "./export-pictures/ppm"
 
+string generateFileName() {
+    time_t now = time(nullptr);
+    tm* t = localtime(&now);
 
-int main() {
-    const int taille = 10000; //10000
+    char buffer[64];
+    strftime(buffer, sizeof(buffer), "no_name-%d-%m_%H-%M-%S.ppm", t);
+
+    return buffer;
+}
+
+int main(int argc, char* argv[]) {
+    const int taille = 10000;
     const double xmin = -1.0, xmax = 1.0;
     const double ymin = -1.0, ymax = 1.0;
     const int iterationmax = 1000;
@@ -20,14 +31,22 @@ int main() {
     const double a = -0.8;
     const double b =  0.156;
 
-    string filename = generateFileName();
-    ofstream out(filename, ios::binary);
+    // --- Gestion du nom de fichier ---
+    string fileName;
+    if (argc > 1) fileName = argv[1];
+    else fileName = generateFileName();
+
+
+    string filePath = string(DEST_FILE_DATA) + "/" + argv[1] + ".ppm";
+    // ---------------------------------
+
+    ofstream out(filePath, ios::binary);
     if (!out) {
-        cerr << "Cannot open file " << filename << endl;
+        cerr << "Cannot open file " << filePath << endl;
         return 1;
     }
 
-    // En-tête PPM (P6 = binaire)
+    // En-tête PPM
     out << "P6\n" << taille << " " << taille << "\n255\n";
 
     for (int line = 0; line < taille; ++line) {
@@ -57,7 +76,7 @@ int main() {
     }
 
     out.close();
-    cout << "Image generated: " << filename << endl;
+    cout << "Image generated: " << filePath << endl;
 
     return 0;
 }
