@@ -1,27 +1,12 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
-#include <ctime>
-#include <cmath>
-#include <sys/stat.h>
 
-using namespace std;
+#include "utils.h"
 
-#define DEST_FILE_DATA "./export-pictures/ppm"
 
-// Génère un nom de fichier horodaté
-string generateFileName() {
-    time_t now = time(nullptr);
-    tm* t = localtime(&now);
-
-    char buffer[64];
-    strftime(buffer, sizeof(buffer), "%d-%m_%H-%M-%S.ppm", t);
-
-    return string(DEST_FILE_DATA) + "/" + buffer;
-}
 
 int main() {
-    const int taille = 10000;
+    const int taille = 1000; //10000
     const double xmin = -1.0, xmax = 1.0;
     const double ymin = -1.0, ymax = 1.0;
     const int iterationmax = 1000;
