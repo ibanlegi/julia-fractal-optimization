@@ -222,7 +222,7 @@ int main(int argc, char* argv[]) {
         cout << "Execution time: " << report.get_executionTime() << " s\n"; 
         cout << "CPU energy: " << report.get_cpuEnergy() << " J\n"; 
         cout << "Memory energy: " << report.get_memEnergy() << " J\n"; 
-        cout << "(CPU +Memory): " << report.get_totalEnergy() << " J\n"; 
+        cout << "(CPU + Memory): " << report.get_totalEnergy() << " J\n"; 
         cout << "Max power: " << report.get_maxPower() << "W\n";
         cout << "===============================\n"; 
     } 

@@ -11,7 +11,6 @@ SRC_DIR       = src
 GEN_DIR       = $(SRC_DIR)/generators
 GEN_BUILD_DIR = generators
 DATA_DIR      = data
-DATA_SAVE_DIR = data-save
 PIC_DIR       = export-pictures
 PIC_JPEG_DIR  = $(PIC_DIR)/jpeg
 PIC_PPM_DIR   = $(PIC_DIR)/ppm
@@ -61,7 +60,7 @@ endif
 # Setup directories
 # ==========================================================
 setup:
-	@mkdir -p $(DATA_DIR) $(DATA_SAVE_DIR) $(PIC_JPEG_DIR) $(PIC_PPM_DIR)
+	@mkdir -p $(DATA_DIR) $(PIC_JPEG_DIR) $(PIC_PPM_DIR)
 	@echo "Created directories."
 
 # ==========================================================
