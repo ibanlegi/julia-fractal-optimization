@@ -14,6 +14,16 @@ C'est le point de comparaison initial. Elle calcule chaque pixel un par un sans 
 
 # 2. Version 1 : Parallélisation (Multi-threading)
 > `julia_parallel.cpp`
+```bash
+Parallel computing across 36 cores...
+===== Measurement Results =====
+Execution time: 1.5288 s
+CPU energy: 2.20306 J
+Memory energy: 0.378415 J
+(CPU + Memory): 2.58147 J
+Max power: 48.6091 W
+===============================
+```
 Cette version utilise **OpenMP** ou les threads natifs pour répartir le calcul des lignes de l'image sur tous les cœurs de votre processeur. Les sources indiquent que cette étape est cruciale car le calcul des fractales est "parfaitement parallèle".
 
 # 3. Version 2 : Optimisations Mathématiques Simples
