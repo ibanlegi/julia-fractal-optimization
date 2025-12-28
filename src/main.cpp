@@ -88,66 +88,75 @@ public:
 // Reads energy CSV and extracts metrics
 class EnergyReport {
 private:
-    double cpuEnergy = 0.0;
-    double memEnergy = 0.0;
-    double totalEnergy = 0.0;
+    double cpuEnergy = 0.0;      // Joules
+    double memEnergy = 0.0;      // Joules
+    double totalEnergy = 0.0;    // Joules
+    double executionTime = 0.0;  // Secondes
+    double maxPower = 0.0;       // Watts
 
 public:
-    double get_cpuEnergy() {
-        return cpuEnergy;
-    } 
-
-    double get_memEnergy() {
-        return memEnergy;
-    }
-
-    double get_totalEnergy() {
-        return totalEnergy;
-    }
+    double get_cpuEnergy()     { return cpuEnergy; } 
+    double get_memEnergy()     { return memEnergy; }
+    double get_totalEnergy()   { return totalEnergy; }
+    double get_executionTime() { return executionTime; }
+    double get_maxPower()      { return maxPower; }
 
     bool parse(const string& fileName) {
-        string filePath = string(PATH_DATA) + fileName + ".csv";
+        string filePath = "./data/" + fileName + ".csv";
         ifstream file(filePath);
-
-        if (!file) {
-            cerr << "ERROR: Cannot open file " << filePath << endl;
-            return false;
-        }
+        if (!file) return false;
 
         string header;
-        if (!getline(file, header)) {
-            cerr << "ERROR: File empty: " << filePath << endl;
-            return false;
-        }
+        if (!getline(file, header)) return false;
 
         stringstream ss(header);
-        unordered_map<string,int> colIndex;
-        string col;
+        unordered_map<string, int> col;
+        string colName;
         int idx = 0;
-        while (ss >> col) colIndex[col] = idx++;
+        while (ss >> colName) col[colName] = idx++;
 
-        // Check required columns
-        vector<string> required = {"totalram","freeram","totalswap","freeswap"};
-        for (auto& r : required) {
-            if (!colIndex.count(r)) {
-                cerr << "ERROR: Missing column " << r << endl;
-                return false;
-            }
-        }
+        string cpuKey = col.count("package-00") ? "package-00" : "package-0";
+        string memKey = "dram0";
 
         string line;
+        bool first = true;
+        double firstTS = 0.0, lastTS = 0.0;
+        double firstCPU = 0.0, lastCPU = 0.0;
+        double firstMem = 0.0, lastMem = 0.0;
+        double prevTS = 0.0, prevCPU = 0.0, prevMem = 0.0;
+
         while (getline(file, line)) {
             stringstream row(line);
             vector<double> vals(idx, 0.0);
+            for (int i = 0; i < idx; i++) row >> vals[i];
 
-            for (int i = 0; i < idx; i++) {
-                if (!(row >> vals[i])) break;
+            double ts = vals[col["#timestamp"]];
+            double cpu = vals[col[cpuKey]];
+            double mem = col.count(memKey) ? vals[col[memKey]] : 0.0;
+
+            if (first) {
+                firstTS = ts; firstCPU = cpu; firstMem = mem;
+                first = false;
+            } else {
+                // Calcul de la puissance instantanée (ΔE / Δt)
+                double dt = ts - prevTS;
+                if (dt > 0) {
+                    double dE = ((cpu - prevCPU) + (mem - prevMem)) / 1e6; 
+                    double instantPower = dE / dt;
+                    if (instantPower > maxPower) maxPower = instantPower;
+                }
             }
-
-            cpuEnergy += vals[colIndex["totalram"] ] - vals[colIndex["freeram"]];
-            memEnergy += vals[colIndex["totalswap"]] - vals[colIndex["freeswap"]];
-            totalEnergy = cpuEnergy + memEnergy;
+            lastTS = ts; lastCPU = cpu; lastMem = mem;
+            prevTS = ts; prevCPU = cpu; prevMem = mem;
         }
+
+        // Calcul final du temps d'exécution
+        executionTime = lastTS - firstTS; 
+        
+        // Calcul final de l'énergie en Joules
+        cpuEnergy = (lastCPU - firstCPU) / 1e6;
+        memEnergy = (lastMem - firstMem) / 1e6;
+        totalEnergy = cpuEnergy + memEnergy;
 
         return true;
     }
@@ -180,21 +189,29 @@ int main(int argc, char* argv[]) {
 
     MojitosMonitor monitor(fileName, frequency, sudoCmd, userCmd);
 
-    Timer timer;
-    timer.start();
+    //Timer timer;
+    //timer.start();
     if (!monitor.run()) return 1;
-    timer.stop();
+    //timer.stop();
 
-    double execTime = timer.elapsed();
+    //double execTime = timer.elapsed();
 
     EnergyReport report;
     report.parse(fileName);
 
     //double totalEnergy = report.get_cpuEnergy() + report.get_memEnergy();
-    double power = (execTime > 0) ? report.get_totalEnergy() / execTime : 0.0;
+    //double power = (execTime > 0) ? report.get_totalEnergy() / execTime : 0.0;
+    /*
+     double get_cpuEnergy()     { return cpuEnergy; } 
+    double get_memEnergy()     { return memEnergy; }
+    double get_totalEnergy()   { return totalEnergy; }
+    double get_executionTime() { return executionTime; }
+    double get_maxPower() 
+    
+    */
 
     if (printOutput) { 
-        cout << fileName << "," << execTime << "," << report.get_cpuEnergy() << "," << report.get_memEnergy() << "," << report.get_totalEnergy() << "," << power << endl; 
+        cout << fileName << "," << report.get_executionTime() << "," << report.get_totalEnergy() << "," << report.get_maxPower() << endl; 
     }else{ 
         cout << "Data file: " << fileName << endl; 
         cout << "Frequency: " << frequency << endl; 
@@ -202,9 +219,11 @@ int main(int argc, char* argv[]) {
         cout << "Executing: " << userCmd << endl; 
         
         cout << "\n===== Measurement Results =====\n"; 
-        cout << "Execution time: " << execTime << " s\n"; 
+        cout << "Execution time: " << report.get_executionTime() << " s\n"; 
         cout << "CPU energy: " << report.get_cpuEnergy() << " J\n"; 
         cout << "Memory energy: " << report.get_memEnergy() << " J\n"; 
+        cout << "(CPU +Memory): " << report.get_totalEnergy() << " J\n"; 
+        cout << "Max power: " << report.get_maxPower() << "W\n";
         cout << "===============================\n"; 
     } 
     
