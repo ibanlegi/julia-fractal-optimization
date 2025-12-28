@@ -4,7 +4,7 @@
 
 # Compiler and flags
 CXX      = g++
-CXXFLAGS = -Wall -O2 -std=c++17
+CXXFLAGS = -Wall -O2 -std=c++17 -fopenmp
 
 # Directories
 SRC_DIR       = src
@@ -28,7 +28,7 @@ GEN_TARGETS  = $(patsubst $(GEN_DIR)/%.cpp,$(GEN_BUILD_DIR)/%,$(GEN_SOURCES))
 # ==========================================================
 
 %: $(SRC_DIR)/%.cpp
-	@echo "Compilation de $< -> $@"
+	@echo "Compilation de $< -> $@ with flags: $(CXXFLAGS)"
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 src: $(SRC_TARGETS)
