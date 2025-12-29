@@ -10,6 +10,7 @@ commands = [
     #'./main -p "generators/julia_parallel" -f 10 -sudo sudo -print'
     './main -p "generators/julia_symetry_shape" -f 10 -sudo sudo -print'
     './main -p "generators/julia_border_tracing" -f 10 -sudo sudo -print'
+    './main -p "generators/julia_fully_optimized" -f 10 -sudo sudo -print'
 ]
 
 iterations = 20
