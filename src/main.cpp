@@ -57,7 +57,7 @@ public:
         userCmd(cmd) {}
 
     bool run() {
-        cout << "[MOJITOS] Generating CSV → " << filePath << endl;
+        //cout << "[MOJITOS] Generating CSV → " << filePath << endl;
 
         int ret = system(buildCommand().c_str());
         if (ret != 0) {
@@ -197,10 +197,10 @@ int main(int argc, char* argv[]) {
     } 
     
 
-    string cmd = string("make convert FILE=") + PATH_PPM + fileName + ".ppm";
+    /*string cmd = string("make convert FILE=") + PATH_PPM + fileName + ".ppm";
     int ret = system(cmd.c_str()); 
     if (ret != 0) cerr << "Command failed with code " << ret << endl; 
-        
+     */   
     return 0;
 
 }

@@ -2,6 +2,14 @@
 Compile : g++ -Wall -O2 -std=c++17 -fopenmp -o generators/julia_parallel src/generators/julia_parallel.cpp
 Execute : ./main -p "./generators/julia_parallel" -f 10 -d "parallel"
 -> v1_parallel
+
+
+## 1er test
+Résultat (reference VS v1_parallel) :
+Score SSIM : 100 %
+Score PSNR : 361.2020 dB
+
+
 */
 
 #include <iostream>
@@ -51,7 +59,7 @@ int main(int argc, char* argv[]) {
     // Taille : 10000x10000x3 octets = 300 Mo
     vector<RGB> image(taille * taille);
 
-    cout << "Parallel computing across " << omp_get_max_threads() << " cores..." << endl;
+    //cout << "Parallel computing across " << omp_get_max_threads() << " cores..." << endl;
 
     // 3. Parallélisation de la boucle externe
     #pragma omp parallel for schedule(dynamic)
@@ -92,7 +100,7 @@ int main(int argc, char* argv[]) {
     out.write(reinterpret_cast<char*>(image.data()), image.size() * 3);
     out.close();
 
-    cout << "Image generated: " << filePath << endl;
+    //cout << "Image generated: " << filePath << endl;
 
     return 0;
 }

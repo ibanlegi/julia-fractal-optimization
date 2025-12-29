@@ -28,9 +28,12 @@ Cette version utilise **OpenMP** ou les threads natifs pour répartir le calcul 
 
 # 3. Version 2 : Optimisations Mathématiques Simples
 > `julia_symmetry_shape.cpp`
-Vous pouvez ici implémenter les méthodes qui évitent des calculs inutiles :
-*   **Symmetry Pasting :** Calculer uniquement la moitié de l'image en exploitant la symétrie de l'ensemble de Julia.
-*   **Shape Checking :** Utiliser des formules pour colorier instantanément les points situés dans les formes connues (comme la cardioïde), évitant ainsi les 1000 itérations par pixel.
+Les optimisations implémentées :
+* **Symmetry Pasting (Symétrie Centrale)** :\\
+L'ensemble de Julia pour un point $c$ possède une symétrie centrale par rapport à l'origine $(0,0)$. Cela signifie que $f(z) = f(-z)$. On ne calcule donc que les 50 premières lignes, et on recopie chaque pixel à sa position symétrique ($180^\circ$). On divise le temps de calcul par 2.
+
+* **Shape Checking (Détection de zone)** :\\ A
+vant de lancer la boucle de 1000 itérations, on vérifie si le point est déjà très loin de l'origine. Pour Julia, si $|z| > 2$ dès le départ, on sait qu'il s'échappera.Buffer Local : Pour éviter les accès disque lents ou les problèmes de symétrie avec out.put(), on utilise un petit buffer pour reconstruire l'image avant l'écriture.
 
 # 4. Version 3 : Border Tracing (Suivi de Frontière)
 > `julia_border_tracing.cpp`

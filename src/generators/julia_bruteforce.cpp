@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
     }
 
     out.close();
-    cout << "Image generated: " << filePath << endl;
+    //cout << "Image generated: " << filePath << endl;
 
     return 0;
 }
