@@ -1,7 +1,6 @@
 /* Version 1: Parallelization (Multi-threading)
 Compile : g++ -Wall -O2 -std=c++17 -fopenmp -o generators/julia_parallel src/generators/julia_parallel.cpp
-Execute : ./main -p "./generators/julia_parallel" -f 10 -d "parallel"
--> v1_parallel
+Execute : ./main -p "./generators/julia_parallel" -f 10 -d "v1_parallel"
 
 
 ## 1er test

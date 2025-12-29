@@ -1,3 +1,9 @@
+/* Version 1: Parallelization (Multi-threading)
+Compile : g++ -Wall -O2 -std=c++17 -o generators/julia_symetry_shape src/generators/julia_symetry_shape.cpp
+Execute : ./main -p "./generators/julia_symetry_shape" -f 10 -d "v2_symetry_shape"
+
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>

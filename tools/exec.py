@@ -2,15 +2,17 @@ import subprocess
 import os
 import math
 
-# Configuration des chemins (à adapter selon tes dossiers)
 CSV_DIR = "./data"
 PPM_DIR = "./export-pictures/ppm"
 
 commands = [
+    #'./main -p "generators/julia_bruteforce" -f 10 -sudo sudo -print'
+    #'./main -p "generators/julia_parallel" -f 10 -sudo sudo -print'
     './main -p "generators/julia_symetry_shape" -f 10 -sudo sudo -print'
+    './main -p "generators/julia_border_tracing" -f 10 -sudo sudo -print'
 ]
 
-iterations = 5
+iterations = 20
 final_file = "final_averages.csv"
 
 def cleanup_files(filenames, keep_file):
