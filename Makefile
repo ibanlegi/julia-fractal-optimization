@@ -68,6 +68,7 @@ setup:
 # ==========================================================
 deps:
 	@echo "Installing dependencies..."
+	sudo-g5k apt update
 	pip install "numpy<2"
 	sudo-g5k apt install imagemagick
 	pip install scikit-image
