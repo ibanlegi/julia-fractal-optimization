@@ -26,6 +26,14 @@ sudo-g5k
 
 > used to switch to root privileges
 
+## Fixed frequency
+```bash
+ileginyo@gros-44:~/embedded-sys_energy$ cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+3900000
+ileginyo@gros-44:~/embedded-sys_energy$ echo $freq | sudo-g5k tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
+3900000
+```
+
 ## MojitO/S
 
 > RAPL sensor: memory and CPU energy consumption (in micro-joules)
