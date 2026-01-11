@@ -8,14 +8,14 @@ CSV_DIR = "./data"
 PPM_DIR = "./export-pictures/ppm"
 
 commands = [
-    './main -p "generators/julia_bruteforce" -f 10 -print',
-    './main -p "generators/julia_parallel" -f 10 -print',
-    './main -p "generators/julia_symetry_shape" -f 10 -print',
-    './main -p "generators/julia_border_tracing" -f 10 -print',
-    './main -p "generators/julia_fully_optimized" -f 10 -print'
+    './main -p "generators/julia_bruteforce" -f 3.9 -print',
+    './main -p "generators/julia_parallel" -f 3.9 -print',
+    './main -p "generators/julia_symetry_shape" -f 3.9 -print',
+    './main -p "generators/julia_border_tracing" -f 3.9 -print',
+    './main -p "generators/julia_fully_optimized" -f 3.9 -print'
 ]
 
-iterations = 20
+iterations = 50
 final_file = "final_averages.csv"
 
 def cleanup_files(filenames, keep_file):
