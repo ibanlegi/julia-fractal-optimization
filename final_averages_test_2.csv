@@ -1,0 +1,6 @@
+Command, File,Average Time (s),Average Energy (J),Average Maximum Power (W)
+"./main -p "generators/julia_bruteforce" -f 3.9 -print",12-01_09-32-33,21.6762,16.96,51.72
+"./main -p "generators/julia_parallel" -f 3.9 -print",12-01_09-37-33,1.3139,20.97,72.68
+"./main -p "generators/julia_symetry_shape" -f 3.9 -print",12-01_09-39-07,10.5934,16.91,50.17
+"./main -p "generators/julia_border_tracing" -f 3.9 -print",12-01_09-58-39,68.3975,16.91,50.39
+"./main -p "generators/julia_fully_optimized" -f 3.9 -print",12-01_10-04-47,3.0422,17.77,62.62
