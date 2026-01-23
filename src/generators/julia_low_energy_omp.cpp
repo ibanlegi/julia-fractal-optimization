@@ -1,14 +1,14 @@
-/* Version 0: Brute-force (The Reference)
-Compile : g++ -Wall -O2 -std=c++17 -o generators/julia_bruteforce src/generators/julia_bruteforce.cpp
-Execute : ./main -p "./generators/julia_bruteforce" -f 10 -d "reference"
--> reference
+/* Version 2.2: Symétrique séquentielle (réduction algorithmique)
+Compile : g++ -O3 -fopenmp julia_low_energy_omp.cpp -o julia_low_energy_omp
+Execute : ./main -p "./generators/julia_low_energy_omp" -f 10 -d "v2_2_low_energy_omp"
+
 */
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-#include <ctime>
+#include <omp.h>
 
 using namespace std;
 
@@ -23,11 +23,16 @@ int main(int argc, char* argv[]) {
     const double a = -0.8;
     const double b = 0.156;
 
+    const int STEP = 2;
+
     vector<unsigned char> image_buffer(taille * taille * 3);
 
-    // Reference
-    for (int line = 0; line < taille; line++) {
-        for (int col = 0; col < taille; col++) {
+    // V2.2
+    #pragma omp parallel for schedule(dynamic)
+    for (int line = 0; line < taille; line += STEP) {
+        for (int col = 0; col < taille; col += STEP) {
+            
+            // Calcul d'un seul pixel pour le bloc STEP x STEP
             int i = 1;
             double x = xmin + col * (xmax - xmin) / taille;
             double y = ymax - line * (ymax - ymin) / taille;
@@ -39,21 +44,30 @@ int main(int argc, char* argv[]) {
                 i++;
             }
 
-            int idx = (line * taille + col) * 3;
-
+            unsigned char r, g, bv;
             if (i > iterationmax) {
-                image_buffer[idx] = image_buffer[idx+1] = image_buffer[idx+2] = 0;
+                r = g = bv = 0;
             } else {
-                image_buffer[idx]   = (4 * i) % 256;
-                image_buffer[idx+1] = (2 * i) % 256;
-                image_buffer[idx+2] = (6 * i) % 256;
+                r = (4 * i) % 256;
+                g = (2 * i) % 256;
+                bv = (6 * i) % 256;
+            }
+
+            // Remplissage du bloc dans le buffer
+            for (int d_line = 0; d_line < STEP && (line + d_line) < taille; d_line++) {
+                for (int d_col = 0; d_col < STEP && (col + d_col) < taille; d_col++) {
+                    int idx = ((line + d_line) * taille + (col + d_col)) * 3;
+                    image_buffer[idx] = r;
+                    image_buffer[idx+1] = g;
+                    image_buffer[idx+2] = bv;
+                }
             }
         }
     }
+    // end V2.2
 
-    // end Reference
-
-    string fileName = (argc > 1) ? argv[1] : "julia_reference";
+    // Gestion du fichier de sortie
+    string fileName = (argc > 1) ? argv[1] : "julia_low_energy_omp";
     string filePath = string(DEST_FILE_DATA) + "/" + fileName + ".ppm";
 
     ofstream out(filePath, ios::binary);
@@ -62,10 +76,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // En-tête PPM
     out << "P6\n" << taille << " " << taille << "\n255\n";
-    
-    // Écriture de tout le buffer d'un coup
     out.write(reinterpret_cast<char*>(image_buffer.data()), image_buffer.size());
     out.close();
 

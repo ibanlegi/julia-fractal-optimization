@@ -1,14 +1,14 @@
-/* Version 0: Brute-force (The Reference)
-Compile : g++ -Wall -O2 -std=c++17 -o generators/julia_bruteforce src/generators/julia_bruteforce.cpp
-Execute : ./main -p "./generators/julia_bruteforce" -f 10 -d "reference"
--> reference
+/* Version 2.1: Symétrique séquentielle (réduction algorithmique)
+Compile : g++ -O3 -fopenmp julia_symmetric_omp.cpp -o julia_symmetric_omp
+Execute : ./main -p "./generators/julia_symmetric_omp" -f 10 -d "v2_1_symmetric_omp"
+
 */
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-#include <ctime>
+#include <omp.h>
 
 using namespace std;
 
@@ -25,9 +25,12 @@ int main(int argc, char* argv[]) {
 
     vector<unsigned char> image_buffer(taille * taille * 3);
 
-    // Reference
-    for (int line = 0; line < taille; line++) {
+    // V2.1
+    #pragma omp parallel for schedule(dynamic)
+    for (int line = 0; line < taille / 2; line++) {
         for (int col = 0; col < taille; col++) {
+            
+            // 1. Calcul du pixel (Moitié supérieure)
             int i = 1;
             double x = xmin + col * (xmax - xmin) / taille;
             double y = ymax - line * (ymax - ymin) / taille;
@@ -39,21 +42,33 @@ int main(int argc, char* argv[]) {
                 i++;
             }
 
-            int idx = (line * taille + col) * 3;
-
+            unsigned char r, g, bv;
             if (i > iterationmax) {
-                image_buffer[idx] = image_buffer[idx+1] = image_buffer[idx+2] = 0;
+                r = g = bv = 0;
             } else {
-                image_buffer[idx]   = (4 * i) % 256;
-                image_buffer[idx+1] = (2 * i) % 256;
-                image_buffer[idx+2] = (6 * i) % 256;
+                r = (4 * i) % 256;
+                g = (2 * i) % 256;
+                bv = (6 * i) % 256;
             }
+
+            // 2. Remplissage du pixel actuel
+            int idx = (line * taille + col) * 3;
+            image_buffer[idx] = r;
+            image_buffer[idx+1] = g;
+            image_buffer[idx+2] = bv;
+
+            // 3. SYMÉTRIE : Remplissage du pixel opposé (Rotation 180°)
+            int sym_idx = ((taille - 1 - line) * taille + (taille - 1 - col)) * 3;
+            image_buffer[sym_idx] = r;
+            image_buffer[sym_idx+1] = g;
+            image_buffer[sym_idx+2] = bv;
         }
     }
 
-    // end Reference
+    // end V2.1
 
-    string fileName = (argc > 1) ? argv[1] : "julia_reference";
+    // Gestion du fichier de sortie
+    string fileName = (argc > 1) ? argv[1] : "julia_symmetric_omp";
     string filePath = string(DEST_FILE_DATA) + "/" + fileName + ".ppm";
 
     ofstream out(filePath, ios::binary);
@@ -62,10 +77,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // En-tête PPM
     out << "P6\n" << taille << " " << taille << "\n255\n";
-    
-    // Écriture de tout le buffer d'un coup
     out.write(reinterpret_cast<char*>(image_buffer.data()), image_buffer.size());
     out.close();
 

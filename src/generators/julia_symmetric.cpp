@@ -1,14 +1,14 @@
-/* Version 0: Brute-force (The Reference)
-Compile : g++ -Wall -O2 -std=c++17 -o generators/julia_bruteforce src/generators/julia_bruteforce.cpp
-Execute : ./main -p "./generators/julia_bruteforce" -f 10 -d "reference"
--> reference
+/* Version 1.1: Symétrique séquentielle (réduction algorithmique)
+Compile : g++ -Wall -O2 -std=c++17 -o generators/julia_symmetric src/generators/julia_symmetric.cpp
+Execute : ./main -p "./generators/julia_symmetric" -f 10 -d "v1_1_symmetric"
+
 */
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-#include <ctime>
+#include <omp.h>
 
 using namespace std;
 
@@ -25,13 +25,14 @@ int main(int argc, char* argv[]) {
 
     vector<unsigned char> image_buffer(taille * taille * 3);
 
-    // Reference
-    for (int line = 0; line < taille; line++) {
+    // V1.1
+    for (int line = 0; line < taille / 2; line++) {
         for (int col = 0; col < taille; col++) {
             int i = 1;
             double x = xmin + col * (xmax - xmin) / taille;
             double y = ymax - line * (ymax - ymin) / taille;
 
+            // Calcul d'échappement (Boucle lourde)
             while (i <= iterationmax && (x*x + y*y) <= 4.0) {
                 double xtmp = x*x - y*y + a;
                 y = 2*x*y + b;
@@ -39,21 +40,24 @@ int main(int argc, char* argv[]) {
                 i++;
             }
 
+            // Définition de la couleur pour le pixel courant
             int idx = (line * taille + col) * 3;
+            image_buffer[idx] = (i > iterationmax) ? 0 : (4 * i) % 256;
+            image_buffer[idx+1] = (i > iterationmax) ? 0 : (2 * i) % 256;
+            image_buffer[idx+2] = (i > iterationmax) ? 0 : (6 * i) % 256;
 
-            if (i > iterationmax) {
-                image_buffer[idx] = image_buffer[idx+1] = image_buffer[idx+2] = 0;
-            } else {
-                image_buffer[idx]   = (4 * i) % 256;
-                image_buffer[idx+1] = (2 * i) % 256;
-                image_buffer[idx+2] = (6 * i) % 256;
-            }
+            // COPIE PAR SYMÉTRIE : On remplit le point opposé (Rotation 180°)
+            int sym_idx = ((taille - 1 - line) * taille + (taille - 1 - col)) * 3;
+            image_buffer[sym_idx] = image_buffer[idx];
+            image_buffer[sym_idx+1] = image_buffer[idx+1];
+            image_buffer[sym_idx+2] = image_buffer[idx+2];
         }
     }
 
-    // end Reference
+    // end V1.1
 
-    string fileName = (argc > 1) ? argv[1] : "julia_reference";
+    // Gestion du fichier de sortie
+    string fileName = (argc > 1) ? argv[1] : "julia_symmetric";
     string filePath = string(DEST_FILE_DATA) + "/" + fileName + ".ppm";
 
     ofstream out(filePath, ios::binary);
@@ -62,10 +66,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // En-tête PPM
     out << "P6\n" << taille << " " << taille << "\n255\n";
-    
-    // Écriture de tout le buffer d'un coup
     out.write(reinterpret_cast<char*>(image_buffer.data()), image_buffer.size());
     out.close();
 

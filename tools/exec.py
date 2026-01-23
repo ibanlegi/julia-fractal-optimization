@@ -2,21 +2,22 @@
 
 import subprocess
 import os
-import math
 
 CSV_DIR = "./data"
 PPM_DIR = "./export-pictures/ppm"
 
 commands = [
     './main -p "generators/julia_bruteforce" -f 3.9 -print',
-    './main -p "generators/julia_parallel" -f 3.9 -print',
-    './main -p "generators/julia_symetry_shape" -f 3.9 -print',
-    './main -p "generators/julia_border_tracing" -f 3.9 -print',
+    './main -p "generators/julia_symmetric" -f 3.9 -print',
+    './main -p "generators/julia_downsampling" -f 3.9 -print',
+    './main -p "generators/julia_early_exit" -f 3.9 -print',
+    './main -p "generators/julia_symmetric_omp" -f 3.9 -print',
+    './main -p "generators/julia_low_energy_omp" -f 3.9 -print',
     './main -p "generators/julia_fully_optimized" -f 3.9 -print'
 ]
 
 iterations = 20
-final_file = "final_averages.csv"
+final_file = "final_averages_test_3.csv"
 
 def cleanup_files(filenames, keep_file):
     # Supprime les fichiers .csv et .ppm 
