@@ -1,0 +1,8 @@
+--- ENV INFO ---
+Date: Fri 23 Jan 2026 05:05:36 PM CET
+Node: gros-55.nancy.grid5000.fr
+CPU: Intel(R) Xeon(R) Gold 5220 CPU @ 2.20GHz
+Governor: performance
+Max Freq: 3900000
+Compiler: gcc (Debian 10.2.1-6) 10.2.1 20210110
+----------------
