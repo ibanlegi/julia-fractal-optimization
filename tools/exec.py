@@ -17,7 +17,7 @@ commands = [
 ]
 
 iterations = 20
-final_file = "final_averages_test_3.csv"
+final_file = "final_averages.csv"
 
 def cleanup_files(filenames, keep_file):
     # Supprime les fichiers .csv et .ppm 

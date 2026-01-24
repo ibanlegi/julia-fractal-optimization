@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
             double x = xmin + col * (xmax - xmin) / taille;
             double y = ymax - line * (ymax - ymin) / taille;
 
-            // La boucle s'arrêtera beaucoup plus vite pour les points "longs"
+            // La boucle s'arrêtera beaucoup plus vite pour les points longs
             while (i <= iterationmax && (x*x + y*y) <= 4.0) {
                 double xtmp = x*x - y*y + a;
                 y = 2*x*y + b;

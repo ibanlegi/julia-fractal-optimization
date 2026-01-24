@@ -1,4 +1,4 @@
-/* Version 2.3: Symétrique séquentielle (réduction algorithmique)
+/* Version 2.3: Optimisiation totale
 Compile : g++ -O3 -fopenmp julia_fully_optimized.cpp -o julia_fully_optimized
 Execute : ./main -p "./generators/julia_fully_optimized" -f 10 -d "v2_3_fully_optimized"
 

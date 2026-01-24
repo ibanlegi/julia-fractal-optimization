@@ -1,4 +1,4 @@
-/* Version 2.1: Symétrique séquentielle (réduction algorithmique)
+/* Version 2.1: Symétrique parallèle (réduction algorithmique)
 Compile : g++ -O3 -fopenmp julia_symmetric_omp.cpp -o julia_symmetric_omp
 Execute : ./main -p "./generators/julia_symmetric_omp" -f 10 -d "v2_1_symmetric_omp"
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     for (int line = 0; line < taille / 2; line++) {
         for (int col = 0; col < taille; col++) {
             
-            // 1. Calcul du pixel (Moitié supérieure)
+            // Calcul du pixel (Moitié supérieure)
             int i = 1;
             double x = xmin + col * (xmax - xmin) / taille;
             double y = ymax - line * (ymax - ymin) / taille;
@@ -51,13 +51,13 @@ int main(int argc, char* argv[]) {
                 bv = (6 * i) % 256;
             }
 
-            // 2. Remplissage du pixel actuel
+            // Remplissage du pixel actuel
             int idx = (line * taille + col) * 3;
             image_buffer[idx] = r;
             image_buffer[idx+1] = g;
             image_buffer[idx+2] = bv;
 
-            // 3. SYMÉTRIE : Remplissage du pixel opposé (Rotation 180°)
+            // Remplissage du pixel opposé (Rotation 180°)
             int sym_idx = ((taille - 1 - line) * taille + (taille - 1 - col)) * 3;
             image_buffer[sym_idx] = r;
             image_buffer[sym_idx+1] = g;

@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
             double x = xmin + col * (xmax - xmin) / taille;
             double y = ymax - line * (ymax - ymin) / taille;
 
-            // Calcul d'échappement (Boucle lourde)
             while (i <= iterationmax && (x*x + y*y) <= 4.0) {
                 double xtmp = x*x - y*y + a;
                 y = 2*x*y + b;
@@ -46,7 +45,7 @@ int main(int argc, char* argv[]) {
             image_buffer[idx+1] = (i > iterationmax) ? 0 : (2 * i) % 256;
             image_buffer[idx+2] = (i > iterationmax) ? 0 : (6 * i) % 256;
 
-            // COPIE PAR SYMÉTRIE : On remplit le point opposé (Rotation 180°)
+            // On remplit le point opposé (Rotation 180°)
             int sym_idx = ((taille - 1 - line) * taille + (taille - 1 - col)) * 3;
             image_buffer[sym_idx] = image_buffer[idx];
             image_buffer[sym_idx+1] = image_buffer[idx+1];

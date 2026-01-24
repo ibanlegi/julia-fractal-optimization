@@ -1,78 +1,64 @@
-
 # embedded-sys-energy
 
-## Links
-- [Project description – Da Costa](https://www.irit.fr/~Georges.Da-Costa/syst%C3%A8mes-embarqu%C3%A9s-%C3%A9nergie/)
-- [Moodle – Embedded Systems, Energy](https://moodle.utoulouse.fr/course/view.php?id=5203#Energie)
+Ce dépôt contient les travaux liés à l'optimisation énergétique de la génération de fractales.
 
-## Connection
+* **Objectif du projet** : [OBJECTIVE](./doc/OBJECTIVE.md)
+* **Plan d'optimisation** : [OPTIMIZATION_PLAN](./doc/OPTIMIZATION_PLAN.md)
+
+## Installation et Préparation
+
+Avant de lancer les tests, il est nécessaire de configurer l'environnement de travail :
+
+1. **Initialisation des dossiers** : Créez l'arborescence nécessaire au projet (dossiers de données et d'export).
 ```bash
-ssh ileginyo@access.grid5000.fr
-````
+make setup
+```
+
+
+2. **Compilation du programme principal** : Génère l'exécutable `main` qui sert d'interface de test.
+```bash
+make
+```
+
+
+3. **Compilation des générateurs** : Compile l'ensemble des approches algorithmiques situées dans le dossier `generators`.
+```bash
+make gen-julia
+```
+
+
+
+## Exécution
+
+Le projet s'appuie sur l'exécutable `main` pour instancier les différents générateurs.
+
+### Lancer une génération
+
+Pour exécuter une approche spécifique (ex: brute-force) :
 
 ```bash
-ssh nancy
+./main -p "./generators/julia_bruteforce" -f 10 -d "reference"
 ```
+
+**Fichiers générés :**
+
+* `data/reference.csv` : Données brutes de sortie de MojitO/S.
+* `export-pictures/ppm/reference.ppm` : Image de la fractale au format PPM.
+* `export-pictures/jpeg/reference.jpeg` : Conversion JPEG automatique.
+
+### Outils et Mesures
+
+* **Conversion manuelle** : `make convert FILE=export-pictures/ppm/reference.ppm`
+* **Mesure PSNR** : `python3 -m tools.psnr -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
+* **Mesure SSIM** : `python3 -m tools.ssim -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
+
+### Automatisation (Benchmarking)
+
+Pour lancer une campagne de tests sur plusieurs itérations :
 
 ```bash
-oarsub -I -l walltime=1:0:0 -p "cluster='gros'"
+python3 tools/exec.py
 ```
 
-## Useful commands
-
-```bash
-sudo-g5k
-```
-
-> used to switch to root privileges
-
-## Fixed frequency
-```bash
-ileginyo@gros-44:~/embedded-sys_energy$ cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
-3900000
-ileginyo@gros-44:~/embedded-sys_energy$ echo $freq | sudo-g5k tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
-3900000
-```
-
-## MojitO/S
-
-> RAPL sensor: memory and CPU energy consumption (in micro-joules)
-
-* `f` | frequency: set the number of measurements per second
-* `t` | time: set the execution duration (seconds). If 0, runs indefinitely
-* `o` | option: specify a log file for MojitO/S or a port number for prometheus_mojitO/S
-  (`<output file>` or `<port number>`)
-* `s` | overhead-stats: enable overhead statistics (nanoseconds)
-
-## Commit Message Rules
-
-### Format
-
-```
-<type>: <short summary>
-```
-
-### Where
-
-**type** must be one of:
-
-* `feat` → new feature
-* `fix` → bug fix
-* `refactor` → code restructuring without behavior change
-* `docs` → documentation
-* `build` → build system / Makefile / CI changes
-
-**short summary** → concise, imperative description
-(recommended maximum: ~50 characters)
-
-### Example
-
-```
-feat: add timestamp-based automatic CSV file naming
-```
-
-### Additional rules
-
-1. **Use imperative tense**: “Add”, “Fix”, “Remove”
-2. **Keep the summary short and descriptive** (details go in the body)
-3. **Optionally**, add a commit body after a blank line if more context is needed
+Le script calcule les moyennes et génère le fichier `final_averages.csv`.
+>Note : Les images JPEG et les mesures de qualité (PSNR/SSIM) doivent être traitées séparément après l'exécution du script.

@@ -27,7 +27,6 @@ int main(int argc, char* argv[]) {
 
     // V1.2
     // STEP = 2 divise le nombre de calculs par 4 (2*2)
-    // STEP = 4 diviserait le nombre de calculs par 16 (4*4)
     const int STEP = 2; 
 
     // Parcours de l'image avec un pas de STEP
@@ -56,8 +55,7 @@ int main(int argc, char* argv[]) {
                 b_val = (6 * i) % 256;
             }
 
-            // 2. Extension de la valeur aux pixels voisins (le "bloc")
-            // Cela crée l'effet de pixellisation (downsampling)
+            // 2. Extension de la valeur aux pixels voisins (le bloc)
             for (int d_line = 0; d_line < STEP && (line + d_line) < taille; d_line++) {
                 for (int d_col = 0; d_col < STEP && (col + d_col) < taille; d_col++) {
                     int idx = ((line + d_line) * taille + (col + d_col)) * 3;

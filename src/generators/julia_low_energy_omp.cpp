@@ -1,4 +1,4 @@
-/* Version 2.2: Symétrique séquentielle (réduction algorithmique)
+/* Version 2.2: Sous-échantillonnage spatial (Downsampling)
 Compile : g++ -O3 -fopenmp julia_low_energy_omp.cpp -o julia_low_energy_omp
 Execute : ./main -p "./generators/julia_low_energy_omp" -f 10 -d "v2_2_low_energy_omp"
 

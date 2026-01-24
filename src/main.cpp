@@ -12,8 +12,8 @@ using namespace std;
 
 #define PATH_DATA "./data/"
 #define PATH_PPM  "./export-pictures/ppm/"
+#define PATH_JPEG "./export-pictures/jpeg/"
 
-// Generate filename from timestamp
 string generateFileName() {
     time_t now = time(nullptr);
     tm* t = localtime(&now);
@@ -22,7 +22,6 @@ string generateFileName() {
     return buffer;
 }
 
-// Responsible for building and executing Mojitos command
 class MojitosMonitor {
 private:
 
@@ -33,10 +32,6 @@ private:
     string userCmd;
 
     string buildCommand() const {
-        /*
-        -r : Active les capteurs RAPL qui mesurent la consommation du processeur et de la mémoire en micro-joules (µJ). 
-
-        */
         return sudoCmd + " ../mojitos/bin/mojitos -r"
              + " -f " + frequency
              + " -o " + filePath
@@ -57,7 +52,7 @@ public:
         userCmd(cmd) {}
 
     bool run() {
-        //cout << "[MOJITOS] Generating CSV → " << filePath << endl;
+        //cout << "[MOJITOS] Generating CSV --> " << filePath << endl;
 
         int ret = system(buildCommand().c_str());
         if (ret != 0) {
@@ -70,14 +65,13 @@ public:
     string getDataFile() const { return filePath; }
 };
 
-// Reads energy CSV and extracts metrics
 class EnergyReport {
 private:
-    double cpuEnergy = 0.0;      // Joules
-    double memEnergy = 0.0;      // Joules
-    double totalEnergy = 0.0;    // Joules
-    double executionTime = 0.0;  // Secondes
-    double maxPower = 0.0;       // Watts
+    double cpuEnergy = 0.0;      // J
+    double memEnergy = 0.0;      // J
+    double totalEnergy = 0.0;    // J
+    double executionTime = 0.0;  // s
+    double maxPower = 0.0;       // W
 
 public:
     double get_cpuEnergy()     { return cpuEnergy; } 
@@ -123,7 +117,7 @@ public:
                 firstTS = ts; firstCPU = cpu; firstMem = mem;
                 first = false;
             } else {
-                // Calcul de la puissance instantanée (ΔE / Δt)
+                // Calcul de la puissance instantanée (delta E / delta t)
                 double dt = ts - prevTS;
                 if (dt > 0) {
                     double dE = ((cpu - prevCPU) + (mem - prevMem)) / 1e6; 
@@ -138,7 +132,7 @@ public:
         // Calcul final du temps d'exécution
         executionTime = lastTS - firstTS; 
         
-        // Calcul final de l'énergie en Joules
+        // Calcul final de l'énergie en J
         cpuEnergy = (lastCPU - firstCPU) / 1e6;
         memEnergy = (lastMem - firstMem) / 1e6;
         totalEnergy = cpuEnergy + memEnergy;
@@ -147,26 +141,25 @@ public:
     }
 };
 
-// MAIN
 int main(int argc, char* argv[]) {
     const char* userCmd = nullptr;
     string fileName;
     string frequency = "10";
     string sudoCmd = "sudo-g5k";
     bool printOutput = false;
+    bool exportJpeg = false;
 
-    // Parse args
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
         if      (arg == "-p"    && i + 1 < argc) userCmd     = argv[++i];
-        else if (arg == "-d"    && i + 1 < argc) fileName    = argv[++i];
+        else if (arg == "-d"    && i + 1 < argc) {fileName    = argv[++i]; exportJpeg = true;}
         else if (arg == "-f"    && i + 1 < argc) frequency   = argv[++i];
         else if (arg == "-sudo" && i + 1 < argc) sudoCmd     = argv[++i];
-        else if (arg == "-print")                printOutput = true;
+        else if (arg == "-print")                printOutput = true; // Si true, adapté pour la lecture du script exec.py
     }
 
     if (!userCmd) {
-        cerr << "Usage: ./main -p \"command\" [-d name] [-f freq] [-print] [-sudo cmd]\n";
+        cerr << "Usage: ./main -p \"command\" [-d <name>] [-f freq] [-print] [-sudo <cmd>]\n";
         return 1;
     }
 
@@ -196,11 +189,12 @@ int main(int argc, char* argv[]) {
         cout << "===============================\n"; 
     } 
     
-
-    /*string cmd = string("make convert FILE=") + PATH_PPM + fileName + ".ppm";
-    int ret = system(cmd.c_str()); 
-    if (ret != 0) cerr << "Command failed with code " << ret << endl; 
-     */   
+    if(exportJpeg && !(printOutput)){
+        string cmd = string("make convert FILE=") + PATH_PPM + fileName + ".ppm";
+        int ret = system(cmd.c_str()); 
+        if (ret != 0) cerr << "Command failed with code " << ret << endl;
+    }
+       
     return 0;
 
 }
