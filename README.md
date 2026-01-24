@@ -4,8 +4,8 @@
 
 This repository contains research and implementation work focused on the **energy optimization of fractal generation**.
 
-* **Project Objective**: [OBJECTIVE](https://www.google.com/search?q=./doc/OBJECTIVE.md)
-* **Optimization Plan**: [OPTIMIZATION_PLAN](https://www.google.com/search?q=./doc/OPTIMIZATION_PLAN.md)
+* **Project Objective**: [OBJECTIVE](./doc/OBJECTIVE.md)
+* **Optimization Plan**: [OPTIMIZATION_PLAN](./doc/OPTIMIZATION_PLAN.md)
 
 ## Installation and Setup
 
