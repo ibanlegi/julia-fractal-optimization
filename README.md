@@ -71,3 +71,13 @@ python3 tools/exec.py
 The script calculates averages and generates the `final_averages.csv` file.
 
 > **Note**: JPEG images and quality metrics (PSNR/SSIM) must be processed separately after the script execution.
+
+## References
+* **DE JONCKHEERE, Luc.** Efficiently Generating the Mandelbrot and Julia Sets.
+* **WIKIPEDIA.** Ensemble learning. `https://en.wikipedia.org/wiki/Ensemble_learning` (2026).
+* **VAVERKA, Jacob.** Guide to Parallel Computing with Julia.
+* **WIKIPEDIA.** Julia Set. `https://en.wikipedia.org/wiki/Julia_set` (2025).
+* **JULIAAI.** DecisionTree.jl. `https://github.com/JuliaAI/DecisionTree.jl` (2023).
+* **GILES, Daniel, et al.** ParticleDA.jl v.1.0: a distributed particle-filtering data assimilation package. *Geosci. Model Dev.* (2024).
+* **JULIA DOCUMENTATION.** Performance Tips. `https://docs.julialang.org/en/v1/manual/performance-tips/`.
+* **REDDIT.** Bonnes pratiques d'optimisation des hyperparamètres. `https://www.reddit.com/r/MachineLearning/comments/142t43v/d_hyperparameter_optimization_best_practices/` (2023).
