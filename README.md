@@ -1,65 +1,71 @@
 # embedded-sys-energy
-- [Description du projet – Da Costa](https://www.irit.fr/~Georges.Da-Costa/syst%C3%A8mes-embarqu%C3%A9s-%C3%A9nergie/)
 
-Ce dépôt contient les travaux liés à l'optimisation énergétique de la génération de fractales.
+* [Project Description – Da Costa](https://www.irit.fr/~Georges.Da-Costa/syst%C3%A8mes-embarqu%C3%A9s-%C3%A9nergie/)
 
-* **Objectif du projet** : [OBJECTIVE](./doc/OBJECTIVE.md)
-* **Plan d'optimisation** : [OPTIMIZATION_PLAN](./doc/OPTIMIZATION_PLAN.md)
+This repository contains research and implementation work focused on the **energy optimization of fractal generation**.
 
-## Installation et Préparation
+* **Project Objective**: [OBJECTIVE](https://www.google.com/search?q=./doc/OBJECTIVE.md)
+* **Optimization Plan**: [OPTIMIZATION_PLAN](https://www.google.com/search?q=./doc/OPTIMIZATION_PLAN.md)
 
-Avant de lancer les tests, il est nécessaire de configurer l'environnement de travail :
+## Installation and Setup
 
-1. **Initialisation des dossiers** : Créez l'arborescence nécessaire au projet (dossiers de données et d'export).
+Before running any tests, the working environment must be configured:
+
+1. **Directory Initialization**: Create the necessary project structure (data and export folders).
+
 ```bash
 make setup
+
 ```
 
+2. **Main Program Compilation**: Generates the `main` executable, which serves as the testing interface.
 
-2. **Compilation du programme principal** : Génère l'exécutable `main` qui sert d'interface de test.
 ```bash
 make
+
 ```
 
+3. **Generator Compilation**: Compiles all algorithmic approaches located in the `generators` folder.
 
-3. **Compilation des générateurs** : Compile l'ensemble des approches algorithmiques situées dans le dossier `generators`.
 ```bash
 make gen-julia
+
 ```
 
+## Execution
 
+The project utilizes the `main` executable to instantiate the various fractal generators.
 
-## Exécution
+### Running a Generation
 
-Le projet s'appuie sur l'exécutable `main` pour instancier les différents générateurs.
-
-### Lancer une génération
-
-Pour exécuter une approche spécifique (ex: brute-force) :
+To execute a specific approach (e.g., brute-force):
 
 ```bash
 ./main -p "./generators/julia_bruteforce" -f 10 -d "reference"
+
 ```
 
-**Fichiers générés :**
+**Generated Files:**
 
-* `data/reference.csv` : Données brutes de sortie de MojitO/S.
-* `export-pictures/ppm/reference.ppm` : Image de la fractale au format PPM.
-* `export-pictures/jpeg/reference.jpeg` : Conversion JPEG automatique.
+* `data/reference.csv`: Raw output data from MojitO/S.
+* `export-pictures/ppm/reference.ppm`: Fractal image in PPM format.
+* `export-pictures/jpeg/reference.jpeg`: Automatic JPEG conversion.
 
-### Outils et Mesures
+### Tools and Metrics
 
-* **Conversion manuelle** : `make convert FILE=export-pictures/ppm/reference.ppm`
-* **Mesure PSNR** : `python3 -m tools.psnr -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
-* **Mesure SSIM** : `python3 -m tools.ssim -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
+* **Manual Conversion**: `make convert FILE=export-pictures/ppm/reference.ppm`
+* **PSNR Measurement**: `python3 -m tools.psnr -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
+* **SSIM Measurement**: `python3 -m tools.ssim -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
 
-### Automatisation (Benchmarking)
+### Automation (Benchmarking)
 
-Pour lancer une campagne de tests sur plusieurs itérations :
+To run a test campaign over multiple iterations:
 
 ```bash
 python3 tools/exec.py
+
 ```
 
-Le script calcule les moyennes et génère le fichier `final_averages.csv`.
->Note : Les images JPEG et les mesures de qualité (PSNR/SSIM) doivent être traitées séparément après l'exécution du script.
+The script calculates averages and generates the `final_averages.csv` file.
+
+> **Note**: JPEG images and quality metrics (PSNR/SSIM) must be processed separately after the script execution.
