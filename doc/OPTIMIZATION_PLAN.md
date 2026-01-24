@@ -1,69 +1,71 @@
-# Plan d'optimisation du générateur de l'ensemble de Julia
-L'optimisation du système repose sur trois axes métriques : le Temps d'exécution ($s$), la Consommation d'énergie ($J$) et la Puissance maximale ($W$).
+# Optimization Plan for the Julia Set Generator
 
-### Version de Référence : Brute-force
-- __Fichier__ : `julia_bruteforce.cpp`
-- __Description__ : Point de comparaison initial calculant chaque pixel unitairement sans optimisation matérielle ou algorithmique.
-- __Usage__ : Sert de base pour quantifier les gains de performance et la dégradation de la qualité (SSIM/PSNR) des versions suivantes.
+The system optimization is based on three metric axes: **Execution Time** (), **Energy Consumption** (), and **Peak Power** ().
 
-## Série 1 : Optimisations algorithmiques séquentielles
+### Reference Version: Brute-force
 
-- __Objectif__ : Réduire drastiquement la consommation d'énergie et le temps d'exécution en réduisant le nombre total d'opérations effectuées. 
-- __Conséquence__ : Accepeter une légère dégradation de la qualité (bruit, crénelage ou perte de détail).
+* **File**: `julia_bruteforce.cpp`
+* **Description**: Initial baseline that calculates each pixel individually without any hardware or algorithmic optimization.
+* **Usage**: Serves as the foundation to quantify performance gains and quality degradation (SSIM/PSNR) for subsequent versions.
 
-### Version 1.1 : Symétrique centrale séquentielle (Réduction algorithmique)
-- __Fichier__ : `julia_symmetric.cpp`
-- __Levier__ : Réduction du domaine de calcul
+---
 
-Cette version divise par deux le nombre de calculs mathématiques en exploitant la symétrie centrale de 
-l'ensemble de Julia $(f(z) = f(-z))$.
+## Series 1: Sequential Algorithmic Optimizations
 
-- __Méthodologie__ : L'algorithme ne calcule que la moitié supérieure des pixels (5000 lignes sur 10000) et duplique les résultats par rotation de 180° pour compléter l'image.
-- __Impact__ : Réduction théorique de 50% du temps CPU et de l'énergie dynamique.
-- __Qualité__ : Théoriquement sans perte, bien que des erreurs d'arrondi ou d'alignement puissent légèrement impacter le score SSIM.
+* **Goal**: Drastically reduce energy consumption and execution time by decreasing the total number of operations.
+* **Consequence**: Accept a slight degradation in quality (noise, aliasing, or loss of detail).
 
-### Version 1.2 : Sous-échantillonnage spatial (Downsampling)
-- __Fichier__ : `julia_downsampling.cpp`
-- __Levier__ : Réduction de la résolution
+### Version 1.1: Sequential Central Symmetry (Algorithmic Reduction)
 
-Au lieu de calculer chaque pixel d'une image $10000 \times 10000$, l'algorithme calcule une image plus petite et l'agrandie.
-On va calculer seulement 1 pixel sur 2 (ou sur 4) dans chaque direction. La résolution par 2 réduit le nombre de pixels à calculer par 4.
+* **File**: `julia_symmetric.cpp`
+* **Lever**: Domain reduction.
+This version cuts the number of mathematical calculations in half by exploiting the central symmetry of the Julia set: .
+* **Methodology**: The algorithm only calculates the upper half of the pixels (e.g., 5,000 lines out of 10,000) and duplicates the results via a 180° rotation to complete the image.
+* **Impact**: Theoretical reduction of 50% in CPU time and dynamic energy.
+* **Quality**: Theoretically lossless, though rounding or alignment errors may slightly affect the SSIM score.
 
-- __Méthodologie__ : Calcul d'un seul pixel sur un bloc de $2 \times 2$ (ou $4 \times 4$), puis extension de la valeur aux pixels voisins.- __Impact__ : Un saut de 2 pixels dans chaque direction divise par 4 le nombre total d'itérations, offrant le gain énergétique le plus radical de cette série.
-- __Qualité__ : Apparition d'un effet de pixellisation, entraînant une chute significative du SSIM.
+### Version 1.2: Spatial Downsampling
 
-### Version 1.3 : Réduction du seuil d'itération (Early exit)
-- __Fichier__ : `julia_early_exit.cpp`
-- __Levier__ : Réduction de la profondeur de calcul
+* **File**: `julia_downsampling.cpp`
+* **Lever**: Resolution reduction.
+Instead of calculating every pixel in a  image, the algorithm calculates a smaller image and scales it up. By calculating only 1 pixel out of every 2 (or 4) in each direction, a resolution reduction by factor of 2 reduces the total pixel count by 4.
+* **Methodology**: Calculate a single pixel for a  (or ) block, then extend that value to neighboring pixels.
+* **Impact**: Skipping 2 pixels in each direction divides the total iterations by 4, offering the most radical energy gain in this series.
+* **Quality**: Visible pixelation effect, leading to a significant drop in SSIM.
 
-Au lieu de faire 1000 itérations, on réduit à 250 ou 500. Ca nous permet d'avoir Réduction proportionnelle du temps passé dans la boucle while pour les points appartenant à l'ensemble de Julia. Au niveau de la qualité, on risque d'avoir des détails fins à la frontière de la fractale qui vont disparaitre, rendant les bords plus "grossiers".
+### Version 1.3: Early Exit (Iteration Threshold Reduction)
 
-- __Méthodologie__ : Le seuil `iterationmax` est abaissé de 1000 à 250 ou 500.
-- __Impact__ : Réduction du temps de calcul principalement dans les zones denses de la fractale (points n'ayant pas encore échappé à la condition $|z| \le 2$).
-- __Qualité__ : Perte de précision sur les structures fines et les filaments complexes situés à la frontière de l'ensemble, rendant les contours plus abrupts ou "grossiers".
+* **File**: `julia_early_exit.cpp`
+* **Lever**: Calculation depth reduction.
+Instead of 1,000 iterations, the limit is reduced to 250 or 500. This provides a proportional reduction in time spent within the `while` loop for points belonging to the Julia set.
+* **Methodology**: The `iterationmax` threshold is lowered from 1,000 to 250 or 500.
+* **Impact**: Reduced calculation time primarily in dense fractal zones (points that have not yet escaped the condition ).
+* **Quality**: Loss of precision in fine structures and complex filaments at the boundaries, making edges appear "coarser" or more abrupt.
 
-## Série 2 : Optimisations algorithmiques parallèles
-En se basant sur les résultats obtenus dans la première série, on va paralléliser les algorithmes les plus performants pour gagner du temps d'optimisation.
+---
 
-### Version 2.1 : Symétrie parallèle de l'ensemble Julia
-- __Fichier__ : `julia_symmetric_omp.cpp `
-- __Levier__ : Algorithme (Symétrie centrale) + Matériel (OpenMP).
+## Series 2: Parallel Algorithmic Optimizations
 
-Cette version combine la réduction de 50% du domaine de calcul avec la répartition de la charge sur tous les cœurs.
-- __Méthodologie__ : On utilise `#pragma omp parallel for` sur la boucle des 5000 premières lignes.
+Based on the results from the first series, the most efficient algorithms are parallelized to maximize optimization gains.
 
-### Version 2.2 : Basse consommation d'énergie
-- __Fichier__ : `julia_low_energy_omp.cpp` 
-- __Levier__ : Résolution dégradée (Downsampling) + Parallélisme.
+### Version 2.1: Parallel Symmetry
 
-C'est la version destinée à établir le record de la plus basse consommation d'énergie possible pour le projet.
-- __Méthodologie__ : On parallélise l'algorithme de la V1.2 (Saut de pixels).
+* **File**: `julia_symmetric_omp.cpp`
+* **Lever**: Algorithm (Central Symmetry) + Hardware (OpenMP).
+Combines the 50% domain reduction with workload distribution across all CPU cores.
+* **Methodology**: Implementation of `#pragma omp parallel for` on the loop processing the first 5,000 lines.
 
-### Version 2.3 : Optimisation totale
-- __Fichier__ : `julia_fully_optimized.cpp `
-- __Levier__ : Symétrie + Early Exit + OpenMP.
+### Version 2.2: Low Energy Profile
 
-Il s'agit de la version finale qui combine les gains sans trop sacrifier la résolution spatiale.
+* **File**: `julia_low_energy_omp.cpp`
+* **Lever**: Degraded resolution (Downsampling) + Parallelism.
+This version is designed to set the record for the lowest possible energy consumption for the project.
+* **Methodology**: Parallelization of the V1.2 algorithm (pixel skipping).
 
-- __Méthodologie__ : Utilisation de la symétrie, d'un plafond d'itérations raisonnable (ex: 500) et du parallélisme dynamique.
-- __Qualité__ : C'est ici qu'on devrait avoir le meilleur compromis SSIM/Énergie.
+### Version 2.3: Full Optimization
+
+* **File**: `julia_fully_optimized.cpp`
+* **Lever**: Symmetry + Early Exit + OpenMP.
+The final version that combines multiple gains without sacrificing too much spatial resolution.
+* **Methodology**: Concurrent use of symmetry, a reasonable iteration cap (e.g., 500), and dynamic parallelism.
+* **Quality**: Expected to provide the best balance (compromise) between SSIM and Energy.
