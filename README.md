@@ -1,4 +1,4 @@
-# Julia-Fractal-Optimization
+# Julia fractal optimization
 
 __Energy-efficient Julia set generation and algorithmic benchmarking.__
 
