@@ -1,4 +1,6 @@
-# embedded-sys-energy
+# Julia-Fractal-Optimization
+
+__Energy-efficient Julia set generation and algorithmic benchmarking.__
 
 * [Project Description – Da Costa](https://www.irit.fr/~Georges.Da-Costa/syst%C3%A8mes-embarqu%C3%A9s-%C3%A9nergie/)
 
