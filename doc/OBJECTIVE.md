@@ -1,48 +1,49 @@
-# Optimisation de la génération d’images de l’ensemble de Julia
+# Optimization of Julia Set Image Generation
 
-## Objectif du projet
-Optimiser la génération d’images de l’ensemble de Julia tout en minimisant la perte de qualité. L’optimisation se fait selon trois axes principaux :
-- **Temps d’exécution** : Réduire le temps total nécessaire à la génération de l’image, tout en conservant la qualité de l’image.
-- **Consommation d’énergie** : Minimiser l’énergie totale consommée par le CPU et la mémoire pendant la génération de l’image, afin d’optimiser l’efficacité énergétique.
-- **Puissance maximale** : Réduire la puissance de pointe (énergie divisée par le temps), pour que le système fonctionne de manière plus stable et efficace.
+## Project Objective
 
-## Approche
-- Implémenter plusieurs stratégies ou algorithmes de génération pour l'ensemble de Julia.
-- Mesurer les performances de chaque approche à l'aide d'outils (ex.: Mojitos).
-- Comparer les résultats pour identifier le meilleur compromis entre rapidité, consommation d'énergie et qualité d'image.
+The goal is to optimize the generation of Julia set images while minimizing quality loss. The optimization focuses on three primary axes:
 
-## Critères de réussite
-- Qualité des images préservée autant que possible (fidélité des pixels, mapping des couleurs, résolution).
-- Mesure du temps d’exécution, de l’énergie et de la puissance maximale.
-- Identifier les configurations offrant le meilleur équilibre entre ces trois axes.
+* **Execution Time**: Reducing the total time required to generate the image while maintaining image integrity.
+* **Energy Consumption**: Minimizing the total energy consumed by the CPU and memory during generation to improve energy efficiency.
+* **Peak Power**: Lowering the peak power (energy divided by time) to ensure the system operates more stably and efficiently.
 
-## Outils de mesure de la qualité de l'image
+## Approach
 
-### Méthodes objectives
-*Comparent une image test à une image de référence pour quantifier la perte de qualité.*
+* Implement multiple generation strategies or algorithms for the Julia set.
+* Measure the performance of each approach using specialized tools (e.g., MojitO/S).
+* Compare results to identify the best compromise between speed, energy consumption, and image quality.
 
-- **PSNR** (Peak Signal-to-Noise Ratio) : Mesure la différence entre deux images en décibels. Plus le PSNR est élevé, meilleure est la qualité. OpenCV (*cv2.PSNR*), skimage (*compare_psnr*).
+## Success Criteria
 
-- **SSIM** (Structural Similarity Index) : Évalue la similarité structurelle, contraste et luminance entre images. Plus proche de 1, meilleure la qualité (tient compte de la structure fractale de l’image). OpenCV (*cv2.quality.QualitySSIM_create*), scikit-image (*compare_ssim*).
+* Preserved image quality (pixel fidelity, color mapping, resolution).
+* Precise measurement of execution time, energy, and peak power.
+* Identification of configurations offering the best balance across the three optimization axes.
 
-- **MSE** (Mean Squared Error) : Mesure la moyenne des carrés des différences de pixels. Plus proche de 0, meilleure qualité.
+## Image Quality Measurement Tools
 
-### Méthodes perceptuelles
-*Essaient d'approcher la perception humaine de la qualité.*
+### Objective Methods
 
-- **FSIM** (Feature Similarity Index) : Compare les caractéristiques locales importantes de l'image. MATLAB, python implementations.
+*These compare a test image against a reference image to quantify quality loss.*
 
-- **VIF** (Visual Information Fidelity) : Compare les informations visuelles entre deux images. MATLAB, python.
+* **PSNR (Peak Signal-to-Noise Ratio)**: Measures the difference between two images in decibels. A higher PSNR indicates better quality. (Implemented via OpenCV or Scikit-image).
+* **SSIM (Structural Similarity Index)**: Evaluates structural similarity, contrast, and luminance. A value closer to 1 indicates higher quality; it is particularly effective for fractal structures.
+* **MSE (Mean Squared Error)**: Measures the average squared difference between pixels. A value closer to 0 indicates higher quality.
 
-- **LPIPS** (Learned Perceptual Image Patch Similarity) : Basé sur un réseau neuronal pour mesurer la perception humaine de la différence entre images. PyTorch, TensorFlow.
+### Perceptual Methods
 
-### Méthodes sans référence (No-Reference/Blind)
-*Utilisation des métriques sans référence.*
+*These attempt to mimic human perception of quality.*
 
-- **BRISQUE** : Evalue la qualité d'une image sans référence. Python (*imquality* ou *pybrisque*).
+* **FSIM (Feature Similarity Index)**: Compares significant local image features.
+* **VIF (Visual Information Fidelity)**: Compares visual information content between two images.
+* **LPIPS (Learned Perceptual Image Patch Similarity)**: Uses neural networks to measure the human perception of differences between images.
 
-- **NIQE** : Similarité statistique avec des images naturelles. Python (*imquality*).
+### No-Reference (Blind) Methods
 
-- **PIQE** : Mesure de "blurriness" et bruit. Python (*imquality*)
+*Metrics used when a reference image is unavailable.*
 
-> **Proposition :** Utilisation combinée de la méthode objective SSIM (avec référence) pour vérifier la fidélité à l'image de base, et BRISQUE/NIQE pour détecter flou ou artefacts introduits par l’optimisation.
+* **BRISQUE**: Evaluates image quality without a reference by analyzing natural scene statistics.
+* **NIQE**: Measures statistical similarity to natural images.
+* **PIQE**: Measures "blurriness" and noise levels.
+
+> **Proposal:** Use a combination of **SSIM** (Objective/Reference-based) to verify fidelity to the base image, alongside **BRISQUE/NIQE** to detect blur or artifacts introduced by the optimization process.
