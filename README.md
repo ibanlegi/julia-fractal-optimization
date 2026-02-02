@@ -6,14 +6,15 @@ __Energy-efficient Julia set generation and algorithmic benchmarking.__
 
 This repository contains research and implementation work focused on the **energy optimization of fractal generation**.
 
-* **Project Objective**: [OBJECTIVE](./doc/OBJECTIVE.md)
-* **Optimization Plan**: [OPTIMIZATION_PLAN](./doc/OPTIMIZATION_PLAN.md)
+* **Project objective**: [OBJECTIVE](./doc/OBJECTIVE.md)
+* **Optimization plan**: [OPTIMIZATION_PLAN](./doc/OPTIMIZATION_PLAN.md)
+* **Results summary** : [RESULTS](./doc/RESULTS)
 
-## Installation and Setup
+## Installation and setup
 
 Before running any tests, the working environment must be configured:
 
-1. **MojitOS Installation**:
+1. **MojitOS installation**:
    This project relies on **MojitOS** for energy and performance measurements.
    You must clone and build MojitOS **in the parent directory of this project**.
 
@@ -32,21 +33,21 @@ parent-directory/
 └── julia-fractal-optimization/
 ```
 
-2. **Directory Initialization**: Create the necessary project structure (data and export folders).
+2. **Directory initialization**: Create the necessary project structure (data and export folders).
 
 ```bash
 make setup
 
 ```
 
-3. **Main Program Compilation**: Generates the `main` executable, which serves as the testing interface.
+3. **Main program compilation**: Generates the `main` executable, which serves as the testing interface.
 
 ```bash
 make
 
 ```
 
-4. **Generator Compilation**: Compiles all algorithmic approaches located in the `generators` folder.
+4. **Generator compilation**: Compiles all algorithmic approaches located in the `generators` folder.
 
 ```bash
 make gen-julia
@@ -57,7 +58,7 @@ make gen-julia
 
 The project utilizes the `main` executable to instantiate the various fractal generators.
 
-### Running a Generation
+### Running a generation
 
 To execute a specific approach (e.g., brute-force):
 
@@ -66,17 +67,17 @@ To execute a specific approach (e.g., brute-force):
 
 ```
 
-**Generated Files:**
+**Generated files:**
 
 * `data/reference.csv`: Raw output data from MojitO/S.
 * `export-pictures/ppm/reference.ppm`: Fractal image in PPM format.
 * `export-pictures/jpeg/reference.jpeg`: Automatic JPEG conversion.
 
-### Tools and Metrics
+### Tools and metrics
 
-* **Manual Conversion**: `make convert FILE=export-pictures/ppm/reference.ppm`
-* **PSNR Measurement**: `python3 -m tools.psnr -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
-* **SSIM Measurement**: `python3 -m tools.ssim -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
+* **Manual conversion**: `make convert FILE=export-pictures/ppm/reference.ppm`
+* **PSNR measurement**: `python3 -m tools.psnr -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
+* **SSIM measurement**: `python3 -m tools.ssim -r export-pictures/jpeg/reference.jpeg -t export-pictures/jpeg/julia_symmetric.jpeg`
 
 ### Automation (Benchmarking)
 
