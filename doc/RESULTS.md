@@ -2,7 +2,7 @@
 
 This `README` focuses **exclusively on the results obtained** during the experimental campaign (performance, energy, power, and image quality).
 
-The file [OPTIMIZATION_PLAN](./OPTIMIZATION_PLAN) describes the **test scenario and methodology** used in this project:
+The file [OPTIMIZATION_PLAN](./OPTIMIZATION_PLAN.md) describes the **test scenario and methodology** used in this project:
 
 * the different optimization stages,
 * the rationale behind each variant,
