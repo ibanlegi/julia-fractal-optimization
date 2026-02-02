@@ -13,21 +13,40 @@ This repository contains research and implementation work focused on the **energ
 
 Before running any tests, the working environment must be configured:
 
-1. **Directory Initialization**: Create the necessary project structure (data and export folders).
+1. **MojitOS Installation**:
+   This project relies on **MojitOS** for energy and performance measurements.
+   You must clone and build MojitOS **in the parent directory of this project**.
+
+```bash
+cd ..
+git clone https://gitlab.irit.fr/sepia-pub/mojitos.git
+cd mojitos
+make
+```
+
+The expected directory layout is:
+
+```text
+parent-directory/
+├── mojitos/
+└── julia-fractal-optimization/
+```
+
+2. **Directory Initialization**: Create the necessary project structure (data and export folders).
 
 ```bash
 make setup
 
 ```
 
-2. **Main Program Compilation**: Generates the `main` executable, which serves as the testing interface.
+3. **Main Program Compilation**: Generates the `main` executable, which serves as the testing interface.
 
 ```bash
 make
 
 ```
 
-3. **Generator Compilation**: Compiles all algorithmic approaches located in the `generators` folder.
+4. **Generator Compilation**: Compiles all algorithmic approaches located in the `generators` folder.
 
 ```bash
 make gen-julia
@@ -74,10 +93,13 @@ The script calculates averages and generates the `final_averages.csv` file.
 
 ## References
 * **DE JONCKHEERE, Luc.** Efficiently Generating the Mandelbrot and Julia Sets.
-* **WIKIPEDIA.** Ensemble learning. `https://en.wikipedia.org/wiki/Ensemble_learning` (2026).
+* **WIKIPEDIA.** Ensemble learning. https://en.wikipedia.org/wiki/Ensemble_learning (2026).
 * **VAVERKA, Jacob.** Guide to Parallel Computing with Julia.
-* **WIKIPEDIA.** Julia Set. `https://en.wikipedia.org/wiki/Julia_set` (2025).
-* **JULIAAI.** DecisionTree.jl. `https://github.com/JuliaAI/DecisionTree.jl` (2023).
+* **WIKIPEDIA.** Julia Set. https://en.wikipedia.org/wiki/Julia_set (2025).
+* **JULIAAI.** DecisionTree.jl. https://github.com/JuliaAI/DecisionTree.jl (2023).
 * **GILES, Daniel, et al.** ParticleDA.jl v.1.0: a distributed particle-filtering data assimilation package. *Geosci. Model Dev.* (2024).
-* **JULIA DOCUMENTATION.** Performance Tips. `https://docs.julialang.org/en/v1/manual/performance-tips/`.
-* **REDDIT.** Bonnes pratiques d'optimisation des hyperparamètres. `https://www.reddit.com/r/MachineLearning/comments/142t43v/d_hyperparameter_optimization_best_practices/` (2023).
+* **JULIA DOCUMENTATION.** Performance Tips. https://docs.julialang.org/en/v1/manual/performance-tips/.
+* **REDDIT.** Bonnes pratiques d'optimisation des hyperparamètres. https://www.reddit.com/r/MachineLearning/comments/142t43v/d_hyperparameter_optimization_best_practices/ (2023).
+* **MOJITOS.** MojitOS: Measurement and Observation of Job energy and Time On Systems.  
+  https://gitlab.irit.fr/sepia-pub/mojitos
+
