@@ -8,7 +8,7 @@ This repository contains research and implementation work focused on the **energ
 
 * **Project objective**: [OBJECTIVE](./doc/OBJECTIVE.md)
 * **Optimization plan**: [OPTIMIZATION_PLAN](./doc/OPTIMIZATION_PLAN.md)
-* **Results summary** : [RESULTS](./doc/RESULTS)
+* **Results summary** : [RESULTS](./doc/RESULTS.md)
 
 ## Installation and setup
 
